@@ -1,0 +1,21 @@
+<div class="page-header">
+	<h1>Dev-Helper</h1>
+</div>
+
+<strong>Status : </strong>{{status['oms-dev-helper'].status}}<br>
+<strong>Pid : </strong>{{status['oms-dev-helper'].pid}}<br>
+<strong>Link : </strong><a href="{{links['oms-dev-helper']}}" target="_blank" ng-if="status['oms-dev-helper'].pid">Link</a><br>
+<hr>
+<strong><textarea class="form-control" rows="10" disabled="">{{console['oms-dev-helper']}}</textarea></strong>
+<hr>
+<div class="btn-group">
+	<button type="button" class="btn btn-default" ng-click="start('oms-dev-helper')">
+		<span class="glyphicon glyphicon-play"></span> Start
+	</button>
+	<button type="button" class="btn btn-default" ng-click="stop('oms-dev-helper')">
+		<span class="glyphicon glyphicon-stop"></span> Stop
+	</button>
+	<button type="button" class="btn btn-default" ng-click="restart('oms-dev-helper')">
+		<span class="glyphicon glyphicon-repeat"></span> Restart
+	</button>
+</div>

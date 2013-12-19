@@ -1,0 +1,73 @@
+<div class="page-header">
+	<button type="button" class="btn btn-default pull-right" ng-click="reload()">
+		<span class="glyphicon glyphicon-refresh"></span> Reload from Source Code
+	</button>
+
+	<h1>API Documentation</h1>
+</div>
+
+<div class="col-sm-3 nav bs-sidenav" id="sidebar" role="navigation">
+	<div class="list-group">
+		<a href="#" class="list-group-item" ng-class="{active: $parent.selected==$index}" ng-repeat="api in apis" ng-click="$parent.selected=$index">{{api.name}}</a>
+	</div>
+</div>
+
+<div class="panel-group col-sm-9" id="accordion">
+
+<div ng-if="selected !== undefined">
+	<h3>{{apis[selected].name}}</h3>
+	<p>{{apis[selected].description}}</p>
+</div>
+<div ng-if="selected === undefined">
+	<h3>OMS API</h3>
+	<p>Welcome in the OMS API documentation tool</p>
+</div>
+
+	<div class="panel panel-default" ng-repeat="route in apis[selected].routes">
+		<div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{$index}}">
+			<h4 class="panel-title">
+				<span class="label label-method {{getClassForMethod(route.method)}}">{{route.method | uppercase}}</span>
+				<span class="api-url">{{route.url}}</span>
+				<span class="pull-right">{{route.name}}</span>
+			</h4>
+		</div>
+		<div id="collapse{{$index}}" class="panel-collapse collapse" collapse="!isOpen">
+			<div class="panel-body">
+				<button type="button" class="btn btn-default pull-right" ng-click="execute(route, $index)" data-toggle="tab" data-target="#headers-{{$index}}">
+					<span class="glyphicon glyphicon-play"></span> Execute
+				</button>
+				<h4>Description</h4>
+				<p>{{route.description}}</p>
+				<hr>
+				<div ng-if="route.params">
+					<h4>Parameters</h4>
+					<form class="form-horizontal" role="form">
+						<div class="form-group" ng-repeat="param in route.params" id="form-group-{{$parent.$index}}-{{param.name}}">
+							<label class="col-sm-1 control-label">{{param.name}}</label>
+							<div class="col-sm-4 parameter">
+								<input type="text" class="form-control" id="input-{{$parent.$index}}-{{param.name}}">
+							</div>
+							<div class="col-sm-7 parameter-description">
+								<span class="required" ng-if="param.require == 'required'">*</span>
+								<i>{{param.description}}</i>
+							</div>
+						</div>
+					</form>
+					<hr>
+				</div>
+				<h4>Response</h4>
+				<ul class="nav nav-tabs">
+					<li><a href="#" data-target="#example-{{$index}}" data-toggle="tab">Example</a></li>
+					<li><a href="#" data-target="#headers-{{$index}}" data-toggle="tab">Headers</a></li>
+					<li><a href="#" data-target="#body-{{$index}}" data-toggle="tab">Highlighted Body</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane fade in active" id="example-{{$index}}"><p><pre>{{route.example | json}}</pre></p></div>
+					<div class="tab-pane fade" id="headers-{{$index}}"><p><pre>{{route.headers | json}}</pre></p></div>
+					<div class="tab-pane fade" id="body-{{$index}}"><p><pre>{{route.data | json}}</pre></p></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

@@ -1,0 +1,21 @@
+<div class="page-header">
+	<h1>Admin-Panel</h1>
+</div>
+
+<strong>Status : </strong>{{status['oms-admin-panel'].status}}<br>
+<strong>Pid : </strong>{{status['oms-admin-panel'].pid}}<br>
+<strong>Link : </strong><a href="{{links['oms-admin-panel']}}" target="_blank" ng-if="status['oms-admin-panel'].pid">Link</a><br>
+<hr>
+<strong><textarea class="form-control" rows="10" disabled>{{console['oms-admin-panel']}}</textarea></strong>
+<hr>
+<div class="btn-group">
+	<button type="button" class="btn btn-default" ng-click="start('oms-admin-panel')">
+		<span class="glyphicon glyphicon-play"></span> Start
+	</button>
+	<button type="button" class="btn btn-default" ng-click="stop('oms-admin-panel')">
+		<span class="glyphicon glyphicon-stop"></span> Stop
+	</button>
+	<button type="button" class="btn btn-default" ng-click="restart('oms-admin-panel')">
+		<span class="glyphicon glyphicon-repeat"></span> Restart
+	</button>
+</div>

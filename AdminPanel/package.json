@@ -1,0 +1,9 @@
+{
+	"name": "oms-admin-panel",
+	"description": "OMS Administration Panel for the OMS application",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies": {
+		"socket.io": "0.9.x"
+	}
+}

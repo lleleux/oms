@@ -1,0 +1,7 @@
+{
+	"name": "oms-agent-manager",
+	"description": "OMS agent manager to manage the OMS agents",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies": {}
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+
+<html lang="en" ng-app="app">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Agent front-end">
+		<meta name="author" content="Leleux Laurent">
+		<title>OMS - Agent</title>
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	</head>
+
+	<body ng-controller="MainCtrl">
+		<div class="container">
+			<h1>Agent</h1>
+			Status: {{model.status}}
+			<br><br>
+			Server:
+			<ul>
+				<li>Host: {{model.server.host}}</li>
+				<li>Port: {{model.server.port}}</li>
+			</ul>
+			Agent:
+			<ul>
+				<li>Reconnection delay: {{model.agent.reconnectionDelay}}</li>
+				<li>Auto reconnect: {{model.agent.autoReconnect}}</li>
+				<li>TLS Private key path: {{model.agent.tlsPrivateKeyPath}}</li>
+				<li>TLS Certificate key path: {{model.agent.tlsCertificatePath}}</li>
+				<li>Reject unauthorized: {{model.agent.rejectUnauthorized}}</li>
+			</ul>
+			<br>
+			<div class="btn-group">
+				<button type="button" class="btn btn-default" ng-click="startAgent()">
+					<span class="glyphicon glyphicon-play"></span> Start
+				</button>
+				<button type="button" class="btn btn-default" ng-click="stopAgent()">
+					<span class="glyphicon glyphicon-stop"></span> Stop
+				</button>
+				<button type="button" class="btn btn-default" ng-click="restartAgent()">
+					<span class="glyphicon glyphicon-repeat"></span> Restart
+				</button>
+			</div>
+		</div>
+
+		<script src="socket.io/socket.io.js"></script>
+		<script src="js/angular.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/main.js"></script>
+	</body>
+
+</html> 

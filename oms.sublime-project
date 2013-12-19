@@ -1,0 +1,29 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "Agent"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "AgentManager"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "AdminPanel"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "API"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "DevHelper"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "node_modules"
+		}
+	]
+}
