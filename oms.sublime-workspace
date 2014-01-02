@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"check",
+				"check-agent-id"
+			],
+			[
+				"CRL",
+				"CRL_FILENAME"
+			],
+			[
+				"che",
+				"check-password"
+			],
+			[
+				"CA",
+				"CA_KEY_PASSWORD"
+			],
+			[
+				"CA_",
+				"CA_DIR"
+			],
+			[
+				"S",
+				"SERIAL"
+			],
+			[
+				"C",
+				"CERT_VALIDITY"
+			],
+			[
+				"CA_KEY",
+				"CA_KEY_PASSWORD"
+			],
+			[
 				"rout",
 				"routeNumber"
 			],
@@ -328,10 +360,10 @@
 	"buffers":
 	[
 		{
-			"file": "Agent/agent.js",
+			"file": "Scripts/ca.sh",
 			"settings":
 			{
-				"buffer_size": 525,
+				"buffer_size": 7810,
 				"line_ending": "Unix"
 			}
 		}
@@ -343,11 +375,35 @@
 		"selected_items":
 		[
 			[
-				"git diff",
-				"Git: Diff All"
+				"",
+				"Base Encoding: Base64 Encode Selection(s)"
 			],
 			[
 				"diff",
+				"Git: Diff All"
+			],
+			[
+				"bra",
+				"Git: Change Branch"
+			],
+			[
+				"bran",
+				"Git: Change Branch"
+			],
+			[
+				"branc",
+				"Git: Change Branch"
+			],
+			[
+				"branch",
+				"Git: New Branch"
+			],
+			[
+				"git bran",
+				"Git: New Branch"
+			],
+			[
+				"git diff",
 				"Git: Diff All"
 			],
 			[
@@ -459,10 +515,6 @@
 				"Base Encoding: Base64 Encode Selection(s)"
 			],
 			[
-				"",
-				"Base Encoding: Base64 Encode Selection(s)"
-			],
-			[
 				"lint",
 				"SublimeLint: Show All Errors"
 			],
@@ -515,7 +567,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 561.0
+		"width": 435.0
 	},
 	"console":
 	{
@@ -540,11 +592,31 @@
 	},
 	"file_history":
 	[
+		"/home/laurent/OMS/Sources/node_modules/commander.js",
+		"/home/laurent/OMS/Sources/Agent/config.properties",
+		"/home/laurent/OMS/Sources/node_modules/express/node_modules/connect/lib/middleware/vhost.js",
+		"/home/laurent/OMS/Sources/node_modules/express/node_modules/connect/node_modules/multiparty/test/fixture/multi_video.upload",
+		"/home/laurent/OMS/Sources/node_modules/mongodb/lib/mongodb/connection/server.js",
+		"/home/laurent/OMS/Sources/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/test/Receiver.test.js",
+		"/home/laurent/OMS/Sources/Agent/frontend/css/bootstrap.min.css",
+		"/home/laurent/OMS/Sources/node_modules/express/node_modules/connect/lib/middleware/basicAuth.js",
+		"/home/laurent/OMS/Sources/node_modules/mongodb/lib/mongodb/connection/base.js",
+		"/home/laurent/OMS/Sources/node_modules/mongodb/node_modules/kerberos/lib/base64.c",
+		"/home/laurent/OMS/Sources/Scripts/ca.sh",
+		"/home/laurent/OMS/Sources/DevHelper/dev_helper.js",
+		"/home/laurent/OMS/Sources/DevHelper/services.sh",
+		"/home/laurent/OMS/Sources/DevHelper/node_modules/commander.js",
+		"/home/laurent/testca/test.sh",
+		"/home/laurent/testca/ca.cnf",
+		"/home/laurent/Desktop/test.sh",
+		"/home/laurent/OMS/Sources/API/api.js",
+		"/home/laurent/OMS/Sources/AgentManager/config.properties",
+		"/home/laurent/OMS/Sources/Agent/agent.js",
+		"/home/laurent/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/partials/apiDoc.html",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/js/controllers.js",
 		"/home/laurent/OMS/Sources/API/node_modules/apiAnalyzer.js",
 		"/home/laurent/OMS/Sources/API/routes/devices.js",
-		"/home/laurent/OMS/Sources/API/api.js",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/js/app.js",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/css/main.css",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/index.html",
@@ -569,10 +641,7 @@
 		"/home/laurent/OMS/Sources/Agent/node_modules/model.js",
 		"/home/laurent/OMS/Sources/Agent/node_modules/protocol.js",
 		"/home/laurent/OMS/Sources/Agent/node_modules/connection.js",
-		"/home/laurent/OMS/Sources/Agent/agent.js",
-		"/home/laurent/OMS/Sources/Agent/config.properties",
 		"/home/laurent/OMS/Sources/Agent/auth/agent.key",
-		"/home/laurent/OMS/Sources/AgentManager/config.properties",
 		"/home/laurent/OMS/Sources/AgentManager/node_modules/connection.js",
 		"/home/laurent/OMS/Sources/AgentManager/agent_manager.js",
 		"/home/laurent/OMS/Sources/AgentManager/node_modules/protocol.js",
@@ -584,7 +653,6 @@
 		"/home/laurent/OMS/Sources/AdminPanel/config.properties",
 		"/home/laurent/OMS/Sources/API/node_modules/dbCommander.js",
 		"/home/laurent/OMS/Sources/node_modules/utils.js",
-		"/home/laurent/OMS/Sources/node_modules/commander.js",
 		"/home/laurent/OMS/Sources/node_modules/logger.js",
 		"/home/laurent/OMS/Sources/AgentManager/auth/ca.key",
 		"/home/laurent/OMS/Sources/Agent/README",
@@ -596,7 +664,6 @@
 		"/home/laurent/OMS/Sources/API/dao/scripts.js",
 		"/home/laurent/OMS/Sources/API/dao/config.js",
 		"/home/laurent/OMS/Sources/API/dao/devices.js",
-		"/home/laurent/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
 		"/home/laurent/.config/sublime-text-3/Packages/Default/Default (Linux).sublime-keymap",
 		"/home/laurent/.config/sublime-text-3/Packages/User/Default (Linux).sublime-keymap",
 		"/home/laurent/OMS/Sources/API/node_modules/ca.com",
@@ -612,17 +679,14 @@
 		"/home/laurent/OMS/Sources/Agent/node_modules/gui.js",
 		"/home/laurent/OMS/Sources/AgentManager/node_modules/connection_tls.js",
 		"/home/laurent/OMS/Sources/node_modules/commander/node_modules/db.js",
-		"/home/laurent/OMS/Sources/DevHelper/node_modules/commander.js",
 		"/home/laurent/OMS/Sources/AdminPanel/package.json",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/js/angular-ressource.min.js",
 		"/home/laurent/OMS/Sources/AdminPanel/node_modules/socket.io/package.json",
 		"/home/laurent/OMS/Sources/API/node_modules/db.js",
 		"/home/laurent/OMS/Sources/API/package.json",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/partials/api.html",
-		"/home/laurent/OMS/Sources/DevHelper/dev_helper.js",
 		"/home/laurent/OMS/Sources/DevHelper/node_modules/express/package.json",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/partials/overview.html",
-		"/home/laurent/OMS/Sources/DevHelper/services.sh",
 		"/home/laurent/OMS/Sources/DevHelper/scripts/mongodb_service.sh",
 		"/home/laurent/OMS/Sources/DevHelper/scripts/oms_services.sh",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/css/main.css",
@@ -655,19 +719,7 @@
 		"/home/laurent/OMS/Sources/Agent/frontend/main.js",
 		"/home/laurent/OMS/Sources/AgentManager/node_modules/connection_basic.js",
 		"/home/laurent/OMS/Sources/AgentManager/node_modules/dao.js",
-		"/home/laurent/OMS/Sources/AgentManager/exceptions.log",
-		"/home/laurent/OMS/Sources/Agent/index.html",
-		"/home/laurent/OMS/Sources/Agent/debug.log",
-		"/home/laurent/OMS/Sources/Agent/exceptions.log",
-		"/home/laurent/OMS/Sources/node_modules/protocol.js",
-		"/home/laurent/OMS/Sources/Agent/node_modules/agentProtocol.js",
-		"/home/laurent/OMS/Sources/node_modules/protocol/protocol.js",
-		"/home/laurent/OMS/Sources/Agent/node_modules/logger.js",
-		"/home/laurent/OMS/Sources/Agent/connection.js",
-		"/home/laurent/OMS/Sources/node_modules/protocol/json/pairingRequest.json",
-		"/home/laurent/OMS/Sources/node_modules/protocol/json/pairingResponse.json",
-		"/home/laurent/OMS/Analyse/Agent Protocol/protocol.xml",
-		"/home/laurent/OMS/Sources/node_modules/protocol/protocolHandler.js"
+		"/home/laurent/OMS/Sources/AgentManager/exceptions.log"
 	],
 	"find":
 	{
@@ -685,6 +737,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"-h",
 			"settings",
 			"messages",
 			"profile",
@@ -792,24 +845,25 @@
 			[
 				{
 					"buffer": 0,
-					"file": "Agent/agent.js",
+					"file": "Scripts/ca.sh",
 					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 525,
+						"buffer_size": 7810,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								7810,
+								7810
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

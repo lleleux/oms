@@ -24,6 +24,10 @@
 		{
 			"follow_symlinks": true,
 			"path": "node_modules"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "Scripts"
 		}
 	]
 }

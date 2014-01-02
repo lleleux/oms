@@ -1,0 +1,11 @@
+init_ca = init-ca --ca-dir {{ca_directory}} --ca-key-password {{password}}
+aW5pdC1jYSAtLWNhLWRpciB7e2NhX2RpcmVjdG9yeX19IC0tY2Eta2V5LXBhc3N3b3JkIHt7cGFzc3dvcmR9fQ==
+
+init_agent = init-agent --ca-dir {{ca_directory}} --ca-key-password {{password}} --agent-id {{agent_id}}
+aW5pdC1hZ2VudCAtLWNhLWRpciB7e2NhX2RpcmVjdG9yeX19IC0tY2Eta2V5LXBhc3N3b3JkIHt7cGFzc3dvcmR9fSAtLWFnZW50LWlkIHt7YWdlbnRfaWR9fQ==
+
+get_agent_cert = agent-cert --ca-dir {{ca_directory}} --agent-id {{agent_id}}
+YWdlbnQtY2VydCAtLWNhLWRpciB7e2NhX2RpcmVjdG9yeX19IC0tYWdlbnQtaWQge3thZ2VudF9pZH19
+
+revoke_agent = revoke --ca-dir {{ca_directory}} --ca-key-password {{password}} --agent-id {{agent_id}}
+cmV2b2tlIC0tY2EtZGlyIHt7Y2FfZGlyZWN0b3J5fX0gLS1jYS1rZXktcGFzc3dvcmQge3twYXNzd29yZH19IC0tYWdlbnQtaWQge3thZ2VudF9pZH19
