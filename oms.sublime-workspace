@@ -359,28 +359,72 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "Scripts/ca.sh",
-			"settings":
-			{
-				"buffer_size": 7810,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 375.0,
+		"height": 102.0,
 		"selected_items":
 		[
 			[
-				"",
-				"Base Encoding: Base64 Encode Selection(s)"
+				"chan",
+				"Git: Change Branch"
+			],
+			[
+				"merge",
+				"Git: Merge Branch"
+			],
+			[
+				"branc",
+				"Git: Change Branch"
+			],
+			[
+				"git bran",
+				"Git: Change Branch"
+			],
+			[
+				"push",
+				"Git: Push Current Branch"
+			],
+			[
+				"git",
+				"Git: Push Current Branch"
 			],
 			[
 				"diff",
 				"Git: Diff All"
+			],
+			[
+				"commi",
+				"Git: Commit"
+			],
+			[
+				"add",
+				"Git: Add..."
+			],
+			[
+				"commit",
+				"Git: Commit"
+			],
+			[
+				"git pus",
+				"Git: Push"
+			],
+			[
+				"stat",
+				"Git: Status"
+			],
+			[
+				"comm",
+				"Git: Commit"
+			],
+			[
+				"64",
+				"Base Encoding: Base64 Encode Selection(s)"
+			],
+			[
+				"",
+				"Base Encoding: Base64 Encode Selection(s)"
 			],
 			[
 				"bra",
@@ -391,15 +435,7 @@
 				"Git: Change Branch"
 			],
 			[
-				"branc",
-				"Git: Change Branch"
-			],
-			[
 				"branch",
-				"Git: New Branch"
-			],
-			[
-				"git bran",
 				"Git: New Branch"
 			],
 			[
@@ -407,24 +443,8 @@
 				"Git: Diff All"
 			],
 			[
-				"push",
-				"Git: Push Current Branch"
-			],
-			[
-				"comm",
-				"Git: Commit"
-			],
-			[
-				"add",
-				"Git: Add..."
-			],
-			[
 				"Snippet: ",
 				"Snippet: Object key — key: \"value\""
-			],
-			[
-				"git pus",
-				"Git: Push Current Branch"
 			],
 			[
 				"git comm",
@@ -451,10 +471,6 @@
 				"Git: Add..."
 			],
 			[
-				"git",
-				"Git: Init"
-			],
-			[
 				"git com",
 				"Git: Commit"
 			],
@@ -464,14 +480,6 @@
 			],
 			[
 				"git co",
-				"Git: Commit"
-			],
-			[
-				"commit",
-				"Git: Commit"
-			],
-			[
-				"commi",
 				"Git: Commit"
 			],
 			[
@@ -509,10 +517,6 @@
 			[
 				"install",
 				"Package Control: Install Package"
-			],
-			[
-				"64",
-				"Base Encoding: Base64 Encode Selection(s)"
 			],
 			[
 				"lint",
@@ -567,7 +571,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 435.0
+		"width": 453.0
 	},
 	"console":
 	{
@@ -592,6 +596,9 @@
 	},
 	"file_history":
 	[
+		"/home/laurent/OMS/Sources/API/api.js",
+		"/home/laurent/OMS/Sources/Scripts/ca.commands",
+		"/home/laurent/OMS/Sources/Scripts/ca.sh",
 		"/home/laurent/OMS/Sources/node_modules/commander.js",
 		"/home/laurent/OMS/Sources/Agent/config.properties",
 		"/home/laurent/OMS/Sources/node_modules/express/node_modules/connect/lib/middleware/vhost.js",
@@ -602,14 +609,12 @@
 		"/home/laurent/OMS/Sources/node_modules/express/node_modules/connect/lib/middleware/basicAuth.js",
 		"/home/laurent/OMS/Sources/node_modules/mongodb/lib/mongodb/connection/base.js",
 		"/home/laurent/OMS/Sources/node_modules/mongodb/node_modules/kerberos/lib/base64.c",
-		"/home/laurent/OMS/Sources/Scripts/ca.sh",
 		"/home/laurent/OMS/Sources/DevHelper/dev_helper.js",
 		"/home/laurent/OMS/Sources/DevHelper/services.sh",
 		"/home/laurent/OMS/Sources/DevHelper/node_modules/commander.js",
 		"/home/laurent/testca/test.sh",
 		"/home/laurent/testca/ca.cnf",
 		"/home/laurent/Desktop/test.sh",
-		"/home/laurent/OMS/Sources/API/api.js",
 		"/home/laurent/OMS/Sources/AgentManager/config.properties",
 		"/home/laurent/OMS/Sources/Agent/agent.js",
 		"/home/laurent/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
@@ -718,8 +723,7 @@
 		"/home/laurent/OMS/Sources/Agent/ca.crt",
 		"/home/laurent/OMS/Sources/Agent/frontend/main.js",
 		"/home/laurent/OMS/Sources/AgentManager/node_modules/connection_basic.js",
-		"/home/laurent/OMS/Sources/AgentManager/node_modules/dao.js",
-		"/home/laurent/OMS/Sources/AgentManager/exceptions.log"
+		"/home/laurent/OMS/Sources/AgentManager/node_modules/dao.js"
 	],
 	"find":
 	{
@@ -840,38 +844,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "Scripts/ca.sh",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 7810,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7810,
-								7810
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
