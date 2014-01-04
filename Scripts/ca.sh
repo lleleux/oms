@@ -21,7 +21,6 @@ DESCRIPTION:
 COMMANDS:
 	init-ca
 	init-agent
-	agent-cert
 	revoke
 
 OPTIONS:
@@ -256,17 +255,8 @@ case "${COMMAND}" in
 		fi
 		# Output the agent key and clear the temporary files
 		cat ${CA_DIR}/${AGENT_ID}/agent.key
-		rm -rf ${CA_DIR}/${AGENT_ID}
-		;;
-
-	# Get the certificate for the given agent. The certificate is given on stdout.
-	"agent-cert")
-		# Checks
-		check-agent-id
-		check-certificate-exists
-		check-certificate-not-revoked
-		# Output the agent certificate
 		cat ${CA_DIR}/certs/${AGENT_ID}.crt
+		rm -rf ${CA_DIR}/${AGENT_ID}
 		;;
 
 	# Revoke the agent certificate and generate the CRL with the new revoked certificate.

@@ -74,7 +74,7 @@ var findAll = function(request, response) {
 
 var insert = function(request, response) {
 	installs.insert(request.body, function (result) {
-		ca.initializeInstall(result[0]._id, function () {
+		ca.initializeAgent(result[0]._id, function () {
 			installs.findById(result[0]._id, function (item) {
 				response.send(item);
 			});
