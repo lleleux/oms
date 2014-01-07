@@ -46,6 +46,10 @@ devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProv
 		templateUrl: '/partials/apiDoc.html',
 		controller: 'ApiDocCtrl'
 	});
+	$routeProvider.when('/api/commands', {
+		templateUrl: '/partials/commands.html',
+		controller: 'CommandsCtrl'
+	});
 
 	$routeProvider.otherwise({
 		redirectTo: '/404'

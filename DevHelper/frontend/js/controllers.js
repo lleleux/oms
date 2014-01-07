@@ -29,45 +29,45 @@ function ServicesCtrl($scope, socket) {
 		$scope.status = {};
 	}
 
-	socket.on('oms-status', function(data) {
+	socket.on('oms-status', function (data) {
 		var services = JSON.parse(data);
 		for (var serviceName in services) {
 			$scope.status[serviceName] = services[serviceName];
 		}
 	});
 
-	socket.on('mongodb-status', function(data) {
+	socket.on('mongodb-status', function (data) {
 		var services = JSON.parse(data);
 		for (var serviceName in services) {
 			$scope.status[serviceName] = services[serviceName];
 		}
 	});
 
-	socket.on('console-init', function(service, data) {
+	socket.on('console-init', function (service, data) {
 		if ($scope.console[service] == undefined) {
 			// Init the console lines
 			$scope.console[service] = data;
 		}
 	});
 
-	socket.on('console-update', function(service, data) {
+	socket.on('console-update', function (service, data) {
 		// Append the console lines
 		$scope.console[service] += data;
 	});
 
-	socket.on('result', function() {
+	socket.on('result', function () {
 		socket.emit('status');
 	});
 
-	$scope.start = function(service) {
+	$scope.start = function (service) {
 		socket.emit('start', [service]);
 	};
 
-	$scope.stop = function(service) {
+	$scope.stop = function (service) {
 		socket.emit('stop', [service]);
 	};
 
-	$scope.restart = function(service) {
+	$scope.restart = function (service) {
 		socket.emit('restart', [service]);
 	};
 
@@ -159,4 +159,42 @@ function ApiDocCtrl($scope, $http, apiDoc) {
 			})
 	};
 
-}
+};
+
+
+
+/**
+ * Commands Controller
+ */
+
+function CommandsCtrl($scope, socket) {
+
+	socket.on('commands', function (data) {
+		commands = JSON.parse(data);
+		$scope.scriptCommands = [];
+		$scope.moduleCommands = [];
+		commands.forEach(function (command) {
+			if (command.script !== undefined) {
+				$scope.scriptCommands.push(command);
+			} else {
+				$scope.moduleCommands.push(command);
+			}
+		});
+	});
+
+	socket.on('scripts', function (data) {
+		$scope.scripts = JSON.parse(data);
+	});
+
+	$scope.reloadFromDir = function () {
+		socket.emit('reload');
+	};
+
+	$scope.decode = function (input) {
+		return atob(input);
+	};
+
+	socket.emit('commands');
+	socket.emit('scripts');
+
+};

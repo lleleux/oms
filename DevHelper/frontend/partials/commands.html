@@ -1,0 +1,60 @@
+<div class="page-header">
+	<button type="button" class="btn btn-default pull-right" ng-click="reloadFromDir()">
+		<span class="glyphicon glyphicon-refresh"></span> Reload from Scripts/
+	</button>
+
+	<h1>Scripts and Commands Manager</h1>
+</div>
+
+<h3>Script Commands</h3>
+<table class="table table-stripped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Script</th>
+			<th>Version</th>
+			<th>Arguments</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="command in scriptCommands">
+			<td>{{command.name}}</td>
+			<td>{{command.script}}</td>
+			<td>{{command.version}}</td>
+			<td><code>{{decode(command.arguments)}}</code></td>
+		</tr>
+	</tbody>
+</table>
+
+<h3>Module Commands</h3>
+<table class="table table-stripped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Command</th>
+			<th>Module</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="command in moduleCommands">
+			<td>{{command.name}}</td>
+			<td><code>{{decode(command.command)}}</code></td>
+			<td>{{command.module}}</td>
+		</tr>
+	</tbody>
+</table>
+
+<h3>Scripts</h3>
+
+<div class="panel panel-default" ng-repeat="script in scripts">
+	<div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{$index}}">
+		<h4 class="panel-title">
+			{{script.name}} (v{{script.version}})
+		</h4>
+	</div>
+	<div id="collapse{{$index}}" class="panel-collapse collapse">
+		<div class="panel-body">
+			<pre>{{decode(script.content)}}</pre>
+		</div>
+	</div>
+</div>
