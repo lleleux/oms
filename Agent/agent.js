@@ -1,7 +1,7 @@
 /**
  * =============================
  *
- * Main application.
+ * Main application
  *
  * Hold the agent model.
  * Start the GUI and start a connection with the server.
