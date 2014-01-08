@@ -1,16 +1,16 @@
 /**
  * =============================
- * 
+ *
  * Manages all the applications to dev easily.
- * 
+ *
  * =============================
- * 
+ *
  * Attributes : /
  *
  * Methods : /
- * 
+ *
  * Events : /
- * 
+ *
  * =============================
  */
 
@@ -24,7 +24,9 @@
 var http = require('http');
 var fs = require('fs');
 var io = require('socket.io');
-// Custom
+// Global
+var moduleInstaller = require('moduleInstaller');
+var db = require('db');
 var commander = require('commander');
 
 
@@ -32,12 +34,15 @@ var commander = require('commander');
 /**
  * Variables
  */
-	
+
 var port = 8082;
 var servicesStatus;
 var servicesScript = '/home/laurent/OMS/Sources/DevHelper/services.sh';
 // Pre-loaded frequently-user web-pages
 var index = fs.readFileSync(__dirname + '/frontend/index.html');
+// Dao
+var scripts = new db.Dao('scripts');
+var commands = new db.Dao('commands');
 
 
 
@@ -85,6 +90,19 @@ var initClient = function (socket) {
 	socket.on('console', function () {
 		getConsole();
 	});
+	socket.on('reload', function () {
+		moduleInstaller.loadDirectory('/home/laurent/OMS/Sources/Scripts/');
+	});
+	socket.on('commands', function () {
+		commands.findAll(function (result) {
+			socket.emit('commands', JSON.stringify(result));
+		});
+	})
+	socket.on('scripts', function () {
+		scripts.findAll(function (result) {
+			socket.emit('scripts', JSON.stringify(result));
+		});
+	})
 };
 
 
@@ -105,7 +123,7 @@ var service = function (commandName, services) {
 	});
 };
 
-// Execute mongodb service commands
+/*// Execute mongodb service commands
 var db = function (commandName) {
 	console.log("New DB command: \"" + commandName);
 	// Add the command in the first position in the table before passing it to the command
@@ -114,7 +132,7 @@ var db = function (commandName) {
 		console.log('DB Command done in ' + data.elapsed + ' millis !');
 		io.sockets.emit('result', JSON.stringify(data.data));
 	});
-}
+}*/
 
 // Get the services status and send it to the browsers
 var getAndSendOmsStatus = function () {
@@ -164,17 +182,21 @@ var getConsole = function () {
  * Start
  */
 
-// Start webserver
-server.listen(port);
+// Connect to DataBase
+db.connect(function () {
+	// Start webserver
+	server.listen(port);
 
-// Socket IO
-io = io.listen(server, { log: false });
-io.set('log level', 1);
+	// Socket IO
+	io = io.listen(server, { log: false });
+	io.set('log level', 1);
 
-// Socket IO handlers
-io.sockets.on('connection', function (socket) {
-	initClient(socket);
+	// Socket IO handlers
+	io.sockets.on('connection', function (socket) {
+		initClient(socket);
+	});
 });
+
 
 
 

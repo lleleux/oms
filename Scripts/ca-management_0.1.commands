@@ -1,0 +1,7 @@
+init_ca 			= 	init-ca --ca-dir {{ca_directory}} --ca-key-password {{password}}
+
+init_agent 			= 	init-agent --ca-dir {{ca_directory}} --ca-key-password {{password}} --agent-id {{agent_id}}
+
+get_agent_cert 		= 	agent-cert --ca-dir {{ca_directory}} --agent-id {{agent_id}}
+
+revoke_agent 		= 	revoke --ca-dir {{ca_directory}} --ca-key-password {{password}} --agent-id {{agent_id}}
