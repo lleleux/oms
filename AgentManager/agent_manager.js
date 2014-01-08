@@ -17,23 +17,40 @@
 
 
 /**
- * Load modules
+ * Declare modules
  */
 
-// Global
-var db = require('db');
 // Custom
-var connection = require('connection');
-var protocol = require('protocol');
-var agentCommander = require('agentCommander');
+var bootstrap = require('bootstrap');
+var connection;
+var agentCommander;
 
 
 
 /**
- * Open database connection and start listening to agent connections
+ * Graceful exit callback
  */
 
-db.connect(function () {
+var gracefulExit = function (callback) {
+	if (connection) {
+		connection.close(callback);
+	} else {
+		if (callback) callback();
+	}
+};
+
+
+
+/**
+ * Bootstrap the application.
+ * Start listening to agent connections.
+ */
+
+bootstrap.bootstrap('oms-agent-manager', gracefulExit, function () {
+	// Load modules
+	connection = require('connection');
+	agentCommander = require('agentCommander');
+	// Start
 	agentCommander.listen();
 	connection.listen();
 });
