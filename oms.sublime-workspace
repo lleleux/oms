@@ -4,6 +4,82 @@
 		"selected_items":
 		[
 			[
+				"scrip",
+				"scriptsDir"
+			],
+			[
+				"sc",
+				"scripts"
+			],
+			[
+				"tmp",
+				"tmpDir"
+			],
+			[
+				"om",
+				"omsApplication"
+			],
+			[
+				"d",
+				"database"
+			],
+			[
+				"load",
+				"loadConfig"
+			],
+			[
+				"_c",
+				"_configureRoutes"
+			],
+			[
+				"_",
+				"_configureServer"
+			],
+			[
+				"boo",
+				"Bootstrap"
+			],
+			[
+				"app",
+				"omsApplication"
+			],
+			[
+				"boot",
+				"_bootstrapApplication"
+			],
+			[
+				"oms",
+				"omsApplication"
+			],
+			[
+				"con",
+				"configDb"
+			],
+			[
+				"lo",
+				"loadServerOptions"
+			],
+			[
+				"unre",
+				"unregisterAndClose"
+			],
+			[
+				"serv",
+				"serverId"
+			],
+			[
+				"gra",
+				"gracefulExit"
+			],
+			[
+				"ser",
+				"serverId"
+			],
+			[
+				"s",
+				"serverInfos"
+			],
+			[
 				"module",
 				"moduleInstaller"
 			],
@@ -20,16 +96,8 @@
 				"loadDirectory"
 			],
 			[
-				"load",
-				"loadCommandFile"
-			],
-			[
 				"ch",
 				"charAt"
-			],
-			[
-				"sc",
-				"script"
 			],
 			[
 				"scr",
@@ -140,16 +208,8 @@
 				"forEach"
 			],
 			[
-				"_",
-				"_parseRouteComments"
-			],
-			[
 				"api",
 				"apiAnalyzer"
-			],
-			[
-				"oms",
-				"omsDB"
 			],
 			[
 				"pa",
@@ -194,10 +254,6 @@
 			[
 				"is",
 				"isDirectory"
-			],
-			[
-				"tmp",
-				"tmpDirectory"
 			],
 			[
 				"key",
@@ -256,10 +312,6 @@
 				"executeScript"
 			],
 			[
-				"d",
-				"dbScript"
-			],
-			[
 				"para",
 				"parameters"
 			],
@@ -298,10 +350,6 @@
 			[
 				"ver",
 				"versions"
-			],
-			[
-				"scrip",
-				"scriptName"
 			],
 			[
 				"ge",
@@ -348,10 +396,6 @@
 				"eventEmitter"
 			],
 			[
-				"om",
-				"oms-agent-manager"
-			],
-			[
 				"exec",
 				"execFile"
 			],
@@ -391,43 +435,19 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "Scripts/example.commands",
-			"settings":
-			{
-				"buffer_size": 40,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 355.0,
+		"height": 375.0,
 		"selected_items":
 		[
 			[
-				"dec",
-				"Base Encoding: Base64 Decode Selection(s)"
+				"push",
+				"Git: Push Current Branch"
 			],
 			[
-				"chang",
-				"Git: Change Branch"
-			],
-			[
-				"branc",
-				"Git: New Branch"
-			],
-			[
-				"branch",
-				"Git: New Branch"
-			],
-			[
-				"diff",
-				"Git: Diff All"
-			],
-			[
-				"commi",
+				"comm",
 				"Git: Commit"
 			],
 			[
@@ -435,24 +455,96 @@
 				"Git: Add..."
 			],
 			[
-				"git comm",
-				"Git: Commit"
+				"cha",
+				"Git: Change Branch"
 			],
 			[
-				"bran",
+				"dele",
+				"Git: Delete Branch"
+			],
+			[
+				"m",
+				"Git: Merge Branch"
+			],
+			[
+				"change",
 				"Git: Change Branch"
+			],
+			[
+				"cgan",
+				"Git: Change Branch"
+			],
+			[
+				"merge",
+				"Git: Merge Branch"
+			],
+			[
+				"chang",
+				"Git: Change Branch"
+			],
+			[
+				"di",
+				"Git: Diff All"
+			],
+			[
+				"diff",
+				"Git: Diff All"
+			],
+			[
+				"merg",
+				"Git: Merge Branch"
+			],
+			[
+				"mer",
+				"Git: Merge Branch"
 			],
 			[
 				"chan",
 				"Git: Change Branch"
 			],
 			[
-				"64",
-				"Base Encoding: Base64 Encode Selection(s)"
+				"commi",
+				"Git: Commit"
 			],
 			[
-				"push",
-				"Git: Push Current Branch"
+				"status",
+				"Git: Status"
+			],
+			[
+				"branc",
+				"Git: Change Branch"
+			],
+			[
+				"git",
+				"Git: Merge Branch"
+			],
+			[
+				"git diff",
+				"Git: Diff All"
+			],
+			[
+				"bran",
+				"Git: Change Branch"
+			],
+			[
+				"git push",
+				"Git: Push"
+			],
+			[
+				"git comm",
+				"Git: Commit"
+			],
+			[
+				"dec",
+				"Base Encoding: Base64 Decode Selection(s)"
+			],
+			[
+				"branch",
+				"Git: New Branch"
+			],
+			[
+				"64",
+				"Base Encoding: Base64 Encode Selection(s)"
 			],
 			[
 				"del",
@@ -463,32 +555,16 @@
 				"Git: Commit"
 			],
 			[
-				"git push",
-				"Git: Push"
-			],
-			[
 				"git pull",
 				"Git: Pull"
-			],
-			[
-				"comm",
-				"Git: Commit"
 			],
 			[
 				"git pu",
 				"Git: Push Current Branch"
 			],
 			[
-				"merge",
-				"Git: Merge Branch"
-			],
-			[
 				"git bran",
 				"Git: Change Branch"
-			],
-			[
-				"git",
-				"Git: Push Current Branch"
 			],
 			[
 				"git pus",
@@ -505,10 +581,6 @@
 			[
 				"bra",
 				"Git: Change Branch"
-			],
-			[
-				"git diff",
-				"Git: Diff All"
 			],
 			[
 				"Snippet: ",
@@ -553,10 +625,6 @@
 			[
 				"git commit",
 				"Git: Commit"
-			],
-			[
-				"di",
-				"Git: Diff All"
 			],
 			[
 				"git: c",
@@ -627,7 +695,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 435.0
+		"width": 453.0
 	},
 	"console":
 	{
@@ -652,27 +720,52 @@
 	},
 	"file_history":
 	[
-		"/home/laurent/OMS/Sources/DevHelper/frontend/js/controllers.js",
-		"/home/laurent/OMS/Sources/node_modules/moduleInstaller.js",
 		"/home/laurent/OMS/Sources/DevHelper/dev_helper.js",
+		"/home/laurent/OMS/Sources/DevHelper/config.properties",
+		"/home/laurent/OMS/Sources/Agent/agent.js",
+		"/home/laurent/OMS/Sources/node_modules/npm-debug.log",
+		"/home/laurent/OMS/Sources/node_modules/bootstrap.js",
+		"/home/laurent/OMS/Sources/Agent/node_modules/config.js",
+		"/home/laurent/OMS/Sources/node_modules/commander.js",
+		"/home/laurent/OMS/Sources/Agent/node_modules/commander.js",
+		"/home/laurent/OMS/Sources/Agent/config.properties",
+		"/home/laurent/OMS/Sources/AgentManager/agent_manager.js",
+		"/home/laurent/OMS/Sources/AgentManager/node_modules/connection.js",
+		"/home/laurent/OMS/Sources/node_modules/config.js",
+		"/home/laurent/OMS/Sources/AdminPanel/admin_panel.js",
+		"/home/laurent/OMS/Sources/node_modules/db.js",
+		"/home/laurent/OMS/Sources/node_modules/config.properties",
+		"/home/laurent/OMS/Sources/API/api.js",
+		"/home/laurent/OMS/Sources/node_modules/moduleInstaller.js",
+		"/home/laurent/OMS/Sources/API/node_modules/server.js",
+		"/home/laurent/OMS/Sources/AdminPanel/node_modules/gui.js",
+		"/home/laurent/OMS/Sources/AgentManager/config.properties",
+		"/home/laurent/OMS/Sources/Agent/frontend/index.html",
+		"/home/laurent/OMS/Sources/node_modules/express/node_modules/connect/node_modules/multiparty/test/fixture/http/no-filename/filename-name.http",
+		"/home/laurent/OMS/Sources/AdminPanel/frontend/js/filters.js",
+		"/home/laurent/OMS/Sources/DevHelper/services.sh",
+		"/home/laurent/OMS/Sources/node_modules/socket.io/node_modules/socket.io-client/node_modules/uglify-js/test/unit/compress/expected/strict-equals.js",
+		"/home/laurent/OMS/Sources/node_modules/socket.io/node_modules/socket.io-client/lib/vendor/web-socket-js/flash-src/WebSocketEvent.as",
+		"/home/laurent/OMS/Sources/node_modules/socket.io/node_modules/socket.io-client/node_modules/uglify-js/test/unit/compress/expected/array1.js",
+		"/home/laurent/OMS/Sources/node_modules/socket.io/node_modules/redis/generate_commands.js",
+		"/home/laurent/OMS/Sources/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/bench/parser.benchmark.js",
+		"/home/laurent/OMS/Sources/AdminPanel/config.properties",
+		"/home/laurent/OMS/Sources/API/config.properties",
+		"/home/laurent/OMS/Sources/node_modules/logger.js",
+		"/home/laurent/OMS/Sources/API/node_modules/dbCommander.js",
+		"/home/laurent/OMS/Sources/Scripts/example.commands",
+		"/home/laurent/OMS/Sources/DevHelper/frontend/js/controllers.js",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/partials/commands.html",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/index.html",
-		"/home/laurent/OMS/Sources/Scripts/example.commands",
-		"/home/laurent/OMS/Sources/DevHelper/config.properties",
-		"/home/laurent/OMS/Sources/API/api.js",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/partials/apiDoc.html",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/partials/devices.html",
 		"/home/laurent/OMS/Sources/node_modules/utils.js",
-		"/home/laurent/OMS/Sources/node_modules/db.js",
 		"/home/laurent/OMS/Sources/Scripts/ca-management_0.1.script",
 		"/home/laurent/OMS/Sources/Scripts/ca.commands",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/js/app.js",
-		"/home/laurent/OMS/Sources/node_modules/commander.js",
-		"/home/laurent/OMS/Sources/API/node_modules/dbCommander.js",
 		"/home/laurent/OMS/Sources/Scripts/ca.sh",
 		"/home/laurent/OMS/Sources/API/node_modules/ca.js",
 		"/home/laurent/OMS/Sources/API/routes/installs.js",
-		"/home/laurent/OMS/Sources/Agent/config.properties",
 		"/home/laurent/OMS/Sources/node_modules/express/node_modules/connect/lib/middleware/vhost.js",
 		"/home/laurent/OMS/Sources/node_modules/express/node_modules/connect/node_modules/multiparty/test/fixture/multi_video.upload",
 		"/home/laurent/OMS/Sources/node_modules/mongodb/lib/mongodb/connection/server.js",
@@ -681,13 +774,10 @@
 		"/home/laurent/OMS/Sources/node_modules/express/node_modules/connect/lib/middleware/basicAuth.js",
 		"/home/laurent/OMS/Sources/node_modules/mongodb/lib/mongodb/connection/base.js",
 		"/home/laurent/OMS/Sources/node_modules/mongodb/node_modules/kerberos/lib/base64.c",
-		"/home/laurent/OMS/Sources/DevHelper/services.sh",
 		"/home/laurent/OMS/Sources/DevHelper/node_modules/commander.js",
 		"/home/laurent/testca/test.sh",
 		"/home/laurent/testca/ca.cnf",
 		"/home/laurent/Desktop/test.sh",
-		"/home/laurent/OMS/Sources/AgentManager/config.properties",
-		"/home/laurent/OMS/Sources/Agent/agent.js",
 		"/home/laurent/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
 		"/home/laurent/OMS/Sources/API/node_modules/apiAnalyzer.js",
 		"/home/laurent/OMS/Sources/API/routes/devices.js",
@@ -696,29 +786,20 @@
 		"/home/laurent/OMS/Sources/API/routes/docApi.js",
 		"/home/laurent/OMS/Sources/API/routes/commands.js",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/partials/dev-helper.html",
-		"/home/laurent/OMS/Sources/node_modules/config.js",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/js/app.js",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/partials/agent.html",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/js/angular-strap.min.js",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/index.html",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/partials/install.html",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/js/controllers.js",
-		"/home/laurent/OMS/Sources/API/config.properties",
-		"/home/laurent/OMS/Sources/node_modules/config.properties",
 		"/home/laurent/OMS/Sources/Agent/node_modules/model.js",
 		"/home/laurent/OMS/Sources/Agent/node_modules/protocol.js",
 		"/home/laurent/OMS/Sources/Agent/node_modules/connection.js",
 		"/home/laurent/OMS/Sources/Agent/auth/agent.key",
-		"/home/laurent/OMS/Sources/AgentManager/node_modules/connection.js",
-		"/home/laurent/OMS/Sources/AgentManager/agent_manager.js",
 		"/home/laurent/OMS/Sources/AgentManager/node_modules/protocol.js",
 		"/home/laurent/OMS/Sources/node_modules/mongodb/package.json",
 		"/home/laurent/OMS/Sources/Agent/auth/agent.crt",
-		"/home/laurent/OMS/Sources/AdminPanel/admin_panel.js",
-		"/home/laurent/OMS/Sources/AdminPanel/frontend/js/filters.js",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/partials/index.html",
-		"/home/laurent/OMS/Sources/AdminPanel/config.properties",
-		"/home/laurent/OMS/Sources/node_modules/logger.js",
 		"/home/laurent/OMS/Sources/AgentManager/auth/ca.key",
 		"/home/laurent/OMS/Sources/Agent/README",
 		"/home/laurent/OMS/Sources/API/dao/installs.js",
@@ -734,7 +815,6 @@
 		"/home/laurent/OMS/Sources/API/node_modules/ca.com",
 		"/home/laurent/OMS/Sources/API/node_modules/ca.sh",
 		"/home/laurent/OMS/Sources/API/node_modules/.bin/express",
-		"/home/laurent/OMS/Sources/Agent/node_modules/commander.js",
 		"/home/laurent/OMS/Sources/node_modules/commander/commander.js",
 		"/home/laurent/OMS/Sources/node_modules/commander/node_modules/commands.js",
 		"/home/laurent/OMS/Sources/API/routes/config.js",
@@ -759,27 +839,15 @@
 		"/home/laurent/OMS/Sources/DevHelper/frontend/partials/agent-manager.html",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/js/angular-route.min.js",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/partials/index.html",
-		"/home/laurent/OMS/Sources/Agent/frontend/index.html",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/404.html",
 		"/home/laurent/OMS/Sources/Agent/node_modules/connection_tls.js",
 		"/home/laurent/OMS/Sources/Agent/frontend/js/main.js",
 		"/home/laurent/OMS/Sources/DevHelper/process.sh",
-		"/home/laurent/OMS/Sources/AdminPanel/node_modules/gui.js",
 		"/home/laurent/OMS/Sources/DevHelper/index.html",
 		"/home/laurent/OMS/Sources/Agent/frontend/404.html",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/partials/404.html",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/404.html",
-		"/home/laurent/OMS/Sources/AdminPanel/frontend/js/bootstrap.min.js",
-		"/home/laurent/OMS/Sources/AdminPanel/frontend/js/main.js",
-		"/home/laurent/OMS/Sources/AdminPanel/frontend/devices.html",
-		"/home/laurent/.config/sublime-text-3/Packages/User/javascriptComment.sublime-snippet",
-		"/home/laurent/.config/sublime-text-3/Packages/User/htmlComment.sublime-snippet",
-		"/home/laurent/.config/sublime-text-3/Packages/User/comment.sublime-snippet",
-		"/home/laurent/OMS/Sources JAVA/OMS_mod_main_offline/index.html",
-		"/home/laurent/.config/sublime-text-3/Packages/User/untitled.sublime-snippet",
-		"/home/laurent/OMS/Sources/oms.sublime-project",
-		"/home/laurent/OMS/Sources/Agent/node_modules/controller.js",
-		"/home/laurent/OMS/Sources/Agent/frontend/js/angular.min.js"
+		"/home/laurent/OMS/Sources/AdminPanel/frontend/js/bootstrap.min.js"
 	],
 	"find":
 	{
@@ -790,6 +858,7 @@
 		"height": 93.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -797,6 +866,13 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"Path",
+			"throw",
+			"db.close",
+			"db.connect",
+			"db.c",
+			"db.connect",
+			"Server",
 			"error",
 			">",
 			"-h",
@@ -902,37 +978,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "Scripts/example.commands",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 40,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								40,
-								40
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
