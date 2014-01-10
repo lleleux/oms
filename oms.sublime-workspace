@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"_",
+				"_listenToLogs"
+			],
+			[
 				"scrip",
 				"scriptsDir"
 			],
@@ -30,10 +34,6 @@
 			[
 				"_c",
 				"_configureRoutes"
-			],
-			[
-				"_",
-				"_configureServer"
 			],
 			[
 				"boo",
@@ -439,20 +439,32 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 375.0,
+		"height": 240.0,
 		"selected_items":
 		[
+			[
+				"diff",
+				"Git: Diff All"
+			],
 			[
 				"push",
 				"Git: Push Current Branch"
 			],
 			[
-				"comm",
+				"com",
 				"Git: Commit"
 			],
 			[
 				"add",
 				"Git: Add..."
+			],
+			[
+				"commi",
+				"Git: Commit"
+			],
+			[
+				"comm",
+				"Git: Commit"
 			],
 			[
 				"cha",
@@ -487,10 +499,6 @@
 				"Git: Diff All"
 			],
 			[
-				"diff",
-				"Git: Diff All"
-			],
-			[
 				"merg",
 				"Git: Merge Branch"
 			],
@@ -501,10 +509,6 @@
 			[
 				"chan",
 				"Git: Change Branch"
-			],
-			[
-				"commi",
-				"Git: Commit"
 			],
 			[
 				"status",
@@ -720,6 +724,9 @@
 	},
 	"file_history":
 	[
+		"/home/laurent/OMS/Sources/Scripts/example.commands",
+		"/home/laurent/OMS/Sources/DevHelper/node_modules/server.js",
+		"/home/laurent/OMS/Sources/AdminPanel/node_modules/gui.js",
 		"/home/laurent/OMS/Sources/DevHelper/dev_helper.js",
 		"/home/laurent/OMS/Sources/DevHelper/config.properties",
 		"/home/laurent/OMS/Sources/Agent/agent.js",
@@ -738,7 +745,6 @@
 		"/home/laurent/OMS/Sources/API/api.js",
 		"/home/laurent/OMS/Sources/node_modules/moduleInstaller.js",
 		"/home/laurent/OMS/Sources/API/node_modules/server.js",
-		"/home/laurent/OMS/Sources/AdminPanel/node_modules/gui.js",
 		"/home/laurent/OMS/Sources/AgentManager/config.properties",
 		"/home/laurent/OMS/Sources/Agent/frontend/index.html",
 		"/home/laurent/OMS/Sources/node_modules/express/node_modules/connect/node_modules/multiparty/test/fixture/http/no-filename/filename-name.http",
@@ -753,7 +759,6 @@
 		"/home/laurent/OMS/Sources/API/config.properties",
 		"/home/laurent/OMS/Sources/node_modules/logger.js",
 		"/home/laurent/OMS/Sources/API/node_modules/dbCommander.js",
-		"/home/laurent/OMS/Sources/Scripts/example.commands",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/js/controllers.js",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/partials/commands.html",
 		"/home/laurent/OMS/Sources/DevHelper/frontend/index.html",
@@ -846,8 +851,7 @@
 		"/home/laurent/OMS/Sources/DevHelper/index.html",
 		"/home/laurent/OMS/Sources/Agent/frontend/404.html",
 		"/home/laurent/OMS/Sources/AdminPanel/frontend/partials/404.html",
-		"/home/laurent/OMS/Sources/AdminPanel/frontend/404.html",
-		"/home/laurent/OMS/Sources/AdminPanel/frontend/js/bootstrap.min.js"
+		"/home/laurent/OMS/Sources/AdminPanel/frontend/404.html"
 	],
 	"find":
 	{
