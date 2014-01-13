@@ -1,0 +1,184 @@
+#!/bin/bash
+
+# TODO	Check if the second part of an argument is present before doing shift 2
+#		Check the return code of the openssl commands
+
+
+
+#---------------------
+# Usage help function
+#---------------------
+
+function usage {
+echo "
+USAGE:
+	$0 command [options]
+
+DESCRIPTION:
+	This script is used to manage a CA
+
+COMMANDS:
+	init-agent
+	gencrl
+
+OPTIONS:
+	all
+		-h, --help
+				Show this message
+		--tmp-dir=DIR
+				The tmp directory, where ca key and certificate are kept
+		--ca-key-password=PASSWORD
+				Set the CA private key password. Default: no password
+		--ca-cert-filename=FILENAME
+				Set the CA certificate filename in the CA directory. Default: ca.crt
+		--ca-key-filename=FILENAME
+				Set the CA private key filename in the CA directory. Default: ca.key
+	init-agent
+		--agent-id
+				The id of the agent for which a key and a certificate must be created.
+		--cert-validity=DAYS
+				Set the certificate validity duration for the certificate. Default: 60
+		--serial=NUMBER
+				Set the serial number that will be used for making the ceritifcate. Default: 01
+	gencrl
+		--crl-validity=DAYS
+				Set the CRL validity duration. Default: 60
+"
+}
+
+
+
+#---------------------------
+# Get command and arguments
+#---------------------------
+
+COMMAND=$1
+shift
+TMP_DIR=
+CA_CERT_FILENAME=ca.crt
+CA_KEY_FILENAME=ca.key
+CA_KEY_PASSWORD=
+CERT_VALIDITY=60
+CRL_VALIDITY=60
+SERIAL=01
+AGENT_ID=
+while [ $# -gt 0 ]; do
+	case "$1" in
+		--tmp-dir)				TMP_DIR=$2;				shift 2;;
+		--ca-cert-filename)		CA_CERT_FILENAME=$2;	shift 2;;
+		--ca-key-filename)		CA_KEY_FILENAME=$2;		shift 2;;
+		--ca-key-password)		CA_KEY_PASSWORD=$2;		shift 2;;
+		--cert-validity)		CERT_VALIDITY=$2;		shift 2;;
+		--crl-validity)			CRL_VALIDITY=$2;			shift 2;;
+		--serial)				SERIAL=$2;				shift 2;;
+		--agent-id)				AGENT_ID=$2;			shift 2;;
+		-h|--help)				usage;					exit 0;;
+		*)						usage;					exit 1;;
+	esac
+done
+
+
+
+#--------
+# Checks
+#--------
+
+# Check the AGENT_ID is given
+function check_agent_id {
+	if [ -z "${AGENT_ID}" ]; then
+		echo "Agent-id is required !"
+		exit 4
+	fi
+}
+
+
+
+#-----------------
+# Check the usage
+#-----------------
+
+# Check if the command is given
+if [ -z "${COMMAND}" ]; then
+	echo "No command provided !"
+	exit 1
+fi
+# Check if the TMP_DIR is given
+if [ -z "${TMP_DIR}" ]; then
+	echo "TMP directory is required !"
+	exit 1
+fi
+# Check if the password for the CA key matches
+if [ -f "${TMP_DIR}${CA_KEY_FILENAME}" ]; then
+	openssl rsa -noout -in ${TMP_DIR}${CA_KEY_FILENAME} -passin pass:${CA_KEY_PASSWORD} 2> /dev/null
+	if [ $? -ne 0 ]; then
+		if [ -z "${CA_KEY_PASSWORD}" ]; then
+			echo "A password is required for the CA private key !"
+		else
+			echo "Wrong password for the CA private key!"
+		fi
+		exit 1
+	fi
+fi
+
+
+
+#---------------------
+# Execute the command
+#---------------------
+
+case "${COMMAND}" in
+
+	# Initialize a new agent by creating him a private key, a certificate... Returns the private key and certificate on stdout and don't store it.
+	"init-agent")
+		# Check if the agent-id is given
+		check_agent_id
+		# Create agent TMP directory
+		AGENT_TMP_DIR="${TMP_DIR}${AGENT_ID}/"
+		mkdir ${AGENT_TMP_DIR}
+		# Generate privatekey
+		openssl genrsa -out ${AGENT_TMP_DIR}agent.key 2048 &> /dev/null
+		#Generate Certificate request
+		openssl req -sha256 -new -key ${AGENT_TMP_DIR}agent.key -out ${AGENT_TMP_DIR}agent.csr -subj "/CN=${AGENT_ID}/O=OO/C=CC/L=LL/ST=ST/"
+		# Create the serial TMP file
+		echo "${SERIAL}" > ${AGENT_TMP_DIR}serial
+		# Sign the certificate request
+		openssl x509 -req -CA ${TMP_DIR}${CA_CERT_FILENAME} -CAkey ${TMP_DIR}${CA_KEY_FILENAME} -days ${CERT_VALIDITY} -in ${AGENT_TMP_DIR}agent.csr -passin pass:${CA_KEY_PASSWORD} -CAserial ${AGENT_TMP_DIR}serial -out ${AGENT_TMP_DIR}agent.crt &> /dev/null
+		# Print the key and the certificate
+		cat ${AGENT_TMP_DIR}agent.key ${AGENT_TMP_DIR}agent.crt
+		# Delete TMP data
+		rm -rf ${AGENT_TMP_DIR}
+		;;
+
+	# Generate the CRL with the revoked certificates.
+	"gencrl")
+		# Create a TMP directory
+		CRL_TMP_DIR=`sudo mktemp -d -p ${TMP_DIR}`"/"
+		# Create needed directory
+		mkdir ${CRL_TMP_DIR}newcerts
+		# Create revocation database
+		echo "R	150110180121Z	140110180251Z	99	unknown	/C=CC/ST=ST/O=OO/CN=1234" > ${CRL_TMP_DIR}index.txt
+		# Create config file
+		echo "
+			[ ca ]
+			default_ca = oms-ca
+			[ oms-ca ]
+			database        = ${CRL_TMP_DIR}index.txt
+			new_certs_dir   = ${CRL_TMP_DIR}newcerts
+		" > ${CRL_TMP_DIR}ca.cnf
+		# Generate CRL
+		openssl ca -gencrl -passin pass:${CA_KEY_PASSWORD} -out ${CRL_TMP_DIR}ca.crl -keyfile ${TMP_DIR}${CA_KEY_FILENAME} -cert ${TMP_DIR}${CA_CERT_FILENAME} -config ${CRL_TMP_DIR}ca.cnf -crldays ${CRL_VALIDITY} -md md5 &> /dev/null
+		# Print CRL
+		cat ${CRL_TMP_DIR}ca.crl
+		# Remove TMP files
+		rm -rf ${CRL_TMP_DIR};
+		;;
+
+	# Default when the command is not recognized
+	*)
+		echo "Invalid command !"
+		exit 1
+		;;
+
+esac
+
+exit 0

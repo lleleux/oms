@@ -28,7 +28,7 @@
 					<button type="button" class="btn btn-default btn-xs" ng-if="install.certificate" ng-click="download(install.certificate);">
 						<span class="glyphicon glyphicon-download"></span> Certificate
 					</button>
-					<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#delete" ng-click="$parent.selected=install;">
+					<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#delete" ng-click="$parent.$parent.selected=install;">
 						<span class="glyphicon glyphicon-trash"></span> Delete
 					</button>
 				</div>

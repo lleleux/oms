@@ -1,0 +1,3 @@
+init-agent		=	init-agent --tmp-dir {{tmp_directory}} --agent-id {{agent_id}} --ca-key-password {{password}} --cert-validity {{validity}} --ca-cert-filename {{cert_filename}} --ca-key-filename {{key_filename}}
+
+generate-crl	=	gencrl --tmp-dir {{tmp_directory}} --ca-key-password {{password}} --crl-validity {{validity}} --ca-cert-filename {{cert_filename}} --ca-key-filename {{key_filename}}
