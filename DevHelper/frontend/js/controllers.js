@@ -83,19 +83,13 @@ function ServicesCtrl($scope, socket) {
  * API Doc Controller
  */
 
-function ApiDocCtrl($scope, $http, apiDoc) {
+function ApiDocCtrl($scope, socket, apiDoc) {
 
-	$scope.apis = apiDoc.query(
-		function (value, responseHeaders) {
-			$scope.apis = value;
-		},
-		function (httpResponse) {
-			$scope.alert = {
-				type: "danger",
-				message: "Unable to retrieve api documentation"
-			};
-		}
-	);
+	socket.emit('getApiDoc');
+
+	socket.on('apiDoc', function (data) {
+		$scope.apis = JSON.parse(data);
+	});
 
 	$scope.getClassForMethod = function (method) {
 		switch (method.toUpperCase()) {
@@ -113,20 +107,7 @@ function ApiDocCtrl($scope, $http, apiDoc) {
 	};
 
 	$scope.reload = function () {
-		$scope.apis = apiDoc.reload(
-			function (value, responseHeaders) {
-				$scope.alert = {
-					type: "success",
-					message: "Refresh done: " + value
-				};
-			},
-			function (httpResponse) {
-				$scope.alert = {
-					type: "danger",
-					message: "Unable to retrieve api documentation"
-				};
-			}
-		);
+		socket.emit('reloadApiDoc');
 	};
 
 	$scope.execute = function (route, routeNumber) {

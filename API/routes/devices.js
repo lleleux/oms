@@ -35,7 +35,7 @@ var agentManagerMessages = new Dao('agentManagerMessages');
  * @method 	findById
  * @name 	Get a device
  * @param 	id {String} required The id of the device to retrieve
- * @example	{name: "test", param: "value"}
+ * @example	{name: "test", param: "value", param2: "value"}
  */
 
 var findById = function (request, response) {
