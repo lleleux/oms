@@ -1,0 +1,4 @@
+start-services			=	start {{services}}
+stop-services			=	stop {{services}}
+restart-services		=	restart {{services}}
+status-services			=	status {{services}}

@@ -56,24 +56,24 @@ function ServicesCtrl($scope, socket) {
 	});
 
 	socket.on('result', function () {
-		socket.emit('status');
+		socket.emit('statusService');
 	});
 
 	$scope.start = function (service) {
-		socket.emit('start', [service]);
+		socket.emit('startService', [service]);
 	};
 
 	$scope.stop = function (service) {
-		socket.emit('stop', [service]);
+		socket.emit('stopService', [service]);
 	};
 
 	$scope.restart = function (service) {
-		socket.emit('restart', [service]);
+		socket.emit('restartService', [service]);
 	};
 
 	// Get data
-	socket.emit('status');
-	socket.emit('console');
+	socket.emit('statusService');
+	socket.emit('getConsole');
 
 };
 
@@ -168,14 +168,14 @@ function CommandsCtrl($scope, socket) {
 	});
 
 	$scope.reloadFromDir = function () {
-		socket.emit('reload');
+		socket.emit('reloadScripts');
 	};
 
 	$scope.decode = function (input) {
 		return atob(input);
 	};
 
-	socket.emit('commands');
-	socket.emit('scripts');
+	socket.emit('getCommands');
+	socket.emit('getScripts');
 
 };

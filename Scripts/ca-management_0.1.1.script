@@ -133,7 +133,7 @@ case "${COMMAND}" in
 		# Check if the agent-id is given
 		check_agent_id
 		# Create agent TMP directory
-		AGENT_TMP_DIR="${TMP_DIR}${AGENT_ID}/"
+		AGENT_TMP_DIR=`sudo mktemp -d -p ${TMP_DIR}`"/"
 		mkdir ${AGENT_TMP_DIR}
 		# Generate privatekey
 		openssl genrsa -out ${AGENT_TMP_DIR}agent.key 2048 &> /dev/null
