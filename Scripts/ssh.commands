@@ -1,0 +1,7 @@
+# Return the command results
+ssh-command			=	ssh -q -oStrictHostKeyChecking=no -i {{key}} {{username}}@{{hostname}} sudo {{command}}
+
+create-file			=	echo "{{base64contents}}" | base64 --decode > {{filename}} && chmod +x {{filename}}
+
+# Return 0 if found, other else
+exists				=	ls {{path}}

@@ -13,33 +13,13 @@ var devHelperApp = angular.module('devHelperApp', ['ngRoute', 'ngResource']);
 devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
 	$routeProvider.when('/', {
-		redirectTo: '/overview'
+		redirectTo: '/services'
 	});
 	$routeProvider.when('/404', {
 		templateUrl: '/partials/404.html'
 	});
-	$routeProvider.when('/overview', {
-		templateUrl: '/partials/overview.html',
-		controller: 'ServicesCtrl'
-	});
-	$routeProvider.when('/agent', {
-		templateUrl: '/partials/agent.html',
-		controller: 'ServicesCtrl'
-	});
-	$routeProvider.when('/agent-manager', {
-		templateUrl: '/partials/agent-manager.html',
-		controller: 'ServicesCtrl'
-	});
-	$routeProvider.when('/admin-panel', {
-		templateUrl: '/partials/admin-panel.html',
-		controller: 'ServicesCtrl'
-	});
-	$routeProvider.when('/dev-helper', {
-		templateUrl: '/partials/dev-helper.html',
-		controller: 'ServicesCtrl'
-	});
-	$routeProvider.when('/api', {
-		templateUrl: '/partials/api.html',
+	$routeProvider.when('/services', {
+		templateUrl: '/partials/services.html',
 		controller: 'ServicesCtrl'
 	});
 	$routeProvider.when('/api/doc', {
@@ -49,6 +29,14 @@ devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProv
 	$routeProvider.when('/api/commands', {
 		templateUrl: '/partials/commands.html',
 		controller: 'CommandsCtrl'
+	});
+	$routeProvider.when('/server/:hostname', {
+		templateUrl: '/partials/server.html',
+		controller: 'ServicesCtrl'
+	});
+	$routeProvider.when('/server/:hostname/:serviceName', {
+		templateUrl: '/partials/service.html',
+		controller: 'ServicesCtrl'
 	});
 
 	$routeProvider.otherwise({
@@ -93,6 +81,10 @@ devHelperApp.factory('socket', function ($rootScope) {
 					}
 				});
 			});
+		},
+
+		removeAllListeners: function () {
+			socket.removeAllListeners();
 		}
 
 	};

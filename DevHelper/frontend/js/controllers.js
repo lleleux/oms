@@ -14,66 +14,56 @@ function HeaderCtrl($scope, $location) {
  * Main Controller
  */
 
-function ServicesCtrl($scope, socket) {
+function ServicesCtrl($scope, $routeParams, socket) {
 
-	$scope.links = {
-		"oms-agent": "http://localhost:8080",
-		"oms-admin-panel": "http://localhost:8081",
-		"oms-dev-helper": "http://localhost:8082"
-	};
+	$scope.servers = [];
+	$scope.console = {};
+	socket.emit('getServers');
 
-	if ($scope.console == undefined) {
-		$scope.console = {};
-	}
-	if ($scope.status == undefined) {
-		$scope.status = {};
-	}
-
-	socket.on('oms-status', function (data) {
-		var services = JSON.parse(data);
-		for (var serviceName in services) {
-			$scope.status[serviceName] = services[serviceName];
+	socket.on('servers', function (data) {
+		console.log('SERVERS');
+		$scope.servers = data;
+		// If a server is selected, add a server value
+		if ($routeParams.hostname) {
+			for (var key in $scope.servers) {
+				if ($scope.servers[key].hostname == $routeParams.hostname) {
+					$scope.server = $scope.servers[key];
+				}
+			}
+		}
+		// If a service is selected, add a service value, ask for console
+		if ($routeParams.serviceName) {
+			if (!$scope.console[$routeParams.hostname]) {
+				$scope.console[$routeParams.hostname] = {};
+			}
+			socket.emit('getConsole', {hostname: $routeParams.hostname, serviceName: $routeParams.serviceName});
+			for (var key in $scope.server.services) {
+				if ($scope.server.services[key].name == $routeParams.serviceName) {
+					$scope.service = $scope.server.services[key];
+				}
+			}
 		}
 	});
 
-	socket.on('mongodb-status', function (data) {
-		var services = JSON.parse(data);
-		for (var serviceName in services) {
-			$scope.status[serviceName] = services[serviceName];
-		}
+	socket.on('console', function (hostname, service, data) {
+		$scope.console[hostname][service] = data;
 	});
 
-	socket.on('console-init', function (service, data) {
-		if ($scope.console[service] == undefined) {
-			// Init the console lines
-			$scope.console[service] = data;
-		}
-	});
-
-	socket.on('console-update', function (service, data) {
-		// Append the console lines
-		$scope.console[service] += data;
-	});
-
-	socket.on('result', function () {
-		socket.emit('statusService');
-	});
-
-	$scope.start = function (service) {
-		socket.emit('startService', [service]);
+	$scope.start = function (hostname, services) {
+		socket.emit('startServices', {hostname: hostname, services: services});
 	};
 
-	$scope.stop = function (service) {
-		socket.emit('stopService', [service]);
+	$scope.stop = function (hostname, services) {
+		socket.emit('stopServices', {hostname: hostname, services: services});
 	};
 
-	$scope.restart = function (service) {
-		socket.emit('restartService', [service]);
+	$scope.restart = function (hostname, services) {
+		socket.emit('restartServices', {hostname: hostname, services: services});
 	};
 
-	// Get data
-	socket.emit('statusService');
-	socket.emit('getConsole');
+	$scope.$on('$destroy', function (event) {
+		socket.removeAllListeners();
+	});
 
 };
 
@@ -140,6 +130,10 @@ function ApiDocCtrl($scope, socket, apiDoc) {
 			})
 	};
 
+	$scope.$on('$destroy', function (event) {
+		socket.removeAllListeners();
+	});
+
 };
 
 
@@ -177,5 +171,9 @@ function CommandsCtrl($scope, socket) {
 
 	socket.emit('getCommands');
 	socket.emit('getScripts');
+
+	$scope.$on('$destroy', function (event) {
+		socket.removeAllListeners();
+	});
 
 };
