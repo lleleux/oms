@@ -177,3 +177,13 @@ function CommandsCtrl($scope, socket) {
 	});
 
 };
+
+
+
+/**
+ * Installer Packages Cntroller
+ */
+
+function InstallerCtrl($scope) {
+
+};

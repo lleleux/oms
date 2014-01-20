@@ -5,3 +5,5 @@ create-file			=	echo "{{base64contents}}" | base64 --decode > {{filename}} && ch
 
 # Return 0 if found, other else
 exists				=	ls {{path}}
+
+create-ssh-keys		=	ssh-keygen -t rsa -f {{filename}} -q -N '' -b 4096

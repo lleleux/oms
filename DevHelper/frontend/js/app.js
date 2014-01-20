@@ -38,6 +38,10 @@ devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProv
 		templateUrl: '/partials/service.html',
 		controller: 'ServicesCtrl'
 	});
+	$routeProvider.when('/installers', {
+		templateUrl: '/partials/installers.html',
+		controller: 'InstallersCtrl'
+	});
 
 	$routeProvider.otherwise({
 		redirectTo: '/404'
