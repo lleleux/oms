@@ -19,7 +19,11 @@
 			<td><a href="/server/{{server.hostname}}/{{service.name}}">{{service.name}}</a></td>
 			<td><span class="label" ng-class="{'label-success': service.status=='running', 'label-warning': service.status=='stopped'}">{{service.status | uppercase}}</span></td>
 			<td>{{service.pid}}</td>
-			<td><a href="{{links[service.name]}}" target="_blank" ng-if="service.pid && links[service.name]">Link</a></td>
+			<td>
+				<a href="{{service.link}}" target="_blank" ng-if="service.pid" class="btn btn-default btn-xs" role="button">
+					<span class="glyphicon glyphicon-new-window"></span> Link
+				</a>
+			</td>
 			<td>
 				<div class="btn-group">
 					<button type="button" class="btn btn-default btn-xs" ng-click="start(server.hostname, [service.name])">
