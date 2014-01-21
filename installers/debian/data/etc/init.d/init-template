@@ -1,0 +1,113 @@
+#! /bin/sh
+
+# Author: Leleux Laurent <leleux.laurent88@gmail.com>
+
+
+DESC="{{description}}"
+NAME={{name}}
+SHORTNAME={{shortname}}
+DAEMON=/usr/share/lib/oms/$SHORTNAME/$SHORTNAME.js
+DAEMON_ARGS=""
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+LOGFILE=/var/log/oms/$SHORTNAME.log
+MAX_STOP_DURATION=15
+
+
+# Exit if the package is not installed
+[ -f "$DAEMON" ] || exit 0
+
+# Delete old pidfile without process
+if [ -f "$PIDFILE" ]; then
+	pid=`cat "$PIDFILE"`
+	[ -z "`ps -eaf | grep $pid | grep $DAEMON`" ] && rm -f $PIDFILE
+fi
+
+
+#
+# Function that starts the daemon/service
+# Return
+#   0 if daemon has been started
+#   1 if daemon was already running
+#   2 if daemon could not be started
+#
+do_start()
+{
+	[ -f "$PIDFILE" ] && return 1
+	logdir=`dirname $LOGFILE`
+	[ -d "$logdir" ] || mkdir $logdir
+	nohup "node" "$DAEMON" 0<"/dev/null"  1>>"$LOGFILE" 2>&1 &
+	[ $? -ne 0 ] && return 2
+	echo $! > $PIDFILE
+	return 0
+}
+
+
+#
+# Function that stops the daemon/service
+# Return
+#   0 if daemon has been stopped
+#   1 if daemon was already stopped
+#   2 if daemon could not be stopped
+#
+do_stop()
+{
+	[ -f "$PIDFILE" ] || return 1
+	kill `cat $PIDFILE`
+	[ $? -ne 0 ] && return 2
+	duration=0
+	until [ -z "`ps -eaf | grep $pid | grep $DAEMON`" ] || [ $duration -ge $MAX_STOP_DURATION ]; do
+		echo -n "."
+		sleep 0.5
+	done
+	echo -n " "
+	[ $duration -ge $MAX_STOP_DURATION ] && return 2
+	rm -f $PIDFILE
+	return 0
+}
+
+
+#
+# Read command and execute it
+#
+case "$1" in
+	start)
+		echo -n "Starting $NAME ... "
+		do_start
+		case "$?" in
+			0) echo "[OK]" ;;
+			1) echo "[Fail]\nService already started" ;;
+			2) echo "[Fail]" ;;
+		esac
+		;;
+	stop)
+		echo -n "Stopping $NAME "
+		do_stop
+		case "$?" in
+			0) echo "[OK]" ;;
+			1) echo "[Fail]\nService already stopped" ;;
+			2) echo "[Fail]" ;;
+		esac
+		;;
+	restart)
+		echo -n "Restarting $NAME "
+		do_stop
+		case "$?" in
+			0|1) do_start
+				 case "$?" in
+					0) echo "[OK]" ;;
+					1) echo "[Fail]\nService already started" ;;
+					2) echo "[Fail]" ;;
+				 esac
+				 ;;
+			2) echo "[Fail]\nUnable to stop $NAME" ;;
+		esac
+		;;
+	status)
+		[ -f "$PIDFILE" ] && echo "Service $NAME is running with pid `cat $PIDFILE`" || echo "Service $NAME is stopped"
+		;;
+	*)
+		echo "Usage: $SCRIPTNAME {start|stop|status|restart}" >&2
+		exit 3
+		;;
+esac

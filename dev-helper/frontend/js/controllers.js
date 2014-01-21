@@ -18,10 +18,11 @@ function ServicesCtrl($scope, $routeParams, socket) {
 
 	$scope.servers = [];
 	$scope.console = {};
+	$scope.config = {};
+
 	socket.emit('getServers');
 
 	socket.on('servers', function (data) {
-		console.log('SERVERS');
 		$scope.servers = data;
 		// If a server is selected, add a server value
 		if ($routeParams.hostname) {
@@ -59,6 +60,14 @@ function ServicesCtrl($scope, $routeParams, socket) {
 
 	$scope.restart = function (hostname, services) {
 		socket.emit('restartServices', {hostname: hostname, services: services});
+	};
+
+	$scope.getLink = function (service) {	// TODO find elegant solution...
+		var links = {
+			'oms-dev-helper':	'http://localhost:8082',
+			'oms-admin-panel':	'http://localhost:8081'
+		};
+		return links[service];
 	};
 
 	$scope.$on('$destroy', function (event) {
@@ -184,6 +193,10 @@ function CommandsCtrl($scope, socket) {
  * Installer Packages Cntroller
  */
 
-function InstallerCtrl($scope) {
+function InstallersCtrl($scope, socket) {
+
+	$scope.reload = function () {
+		socket.emit('generateInstallers');
+	};
 
 };

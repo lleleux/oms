@@ -1,0 +1,45 @@
+#! /bin/bash
+
+NAME=$1
+SHORTNAME=$2
+DESCRIPTION=$3
+VERSION=$4
+SOURCES_DIR=$5
+INSTALLERS_DIR=$6
+
+# Copy debian package structure
+cp -r ${SOURCES_DIR}installers/debian/* ${INSTALLERS_DIR}
+
+# Copy sources in package
+cp -r ${SOURCES_DIR}${SHORTNAME} ${INSTALLERS_DIR}data/usr/share/oms/
+# Copy modules in package
+cp -r ${SOURCES_DIR}node_modules/* ${INSTALLERS_DIR}data/usr/share/oms/${SHORTNAME}/node_modules/
+
+# Adapt init-template
+sed -i "s/{{name}}/${NAME}/g" ${INSTALLERS_DIR}data/etc/init.d/init-template
+sed -i "s/{{shortname}}/${SHORTNAME}/g" ${INSTALLERS_DIR}data/etc/init.d/init-template
+sed -i "s/{{description}}/${DESCRIPTION}/g" ${INSTALLERS_DIR}data/etc/init.d/init-template
+mv ${INSTALLERS_DIR}data/etc/init.d/init-template ${INSTALLERS_DIR}data/etc/init.d/${NAME}
+
+# Package the data
+pushd ${INSTALLERS_DIR}data/
+tar -czf ../data.tar.gz *
+popd
+
+# Adapt the control file
+let SIZE=`du -s ${INSTALLERS_DIR}data/ | sed s'/\s\+.*//'`+8
+sed -i "s/{{name}}/${NAME}/g" ${INSTALLERS_DIR}control/control
+sed -i "s/{{version}}/${VERSION}/g" ${INSTALLERS_DIR}control/control
+sed -i "s/{{description}}/${DESCRIPTION}/g" ${INSTALLERS_DIR}control/control
+sed -i "s/{{size}}/${SIZE}/g" ${INSTALLERS_DIR}control/control
+
+# Package the control
+pushd ${INSTALLERS_DIR}control
+tar -czf ../control.tar.gz *
+popd
+
+# Package the *.deb and clean
+pushd ${INSTALLERS_DIR}
+ar r ${NAME}_${VERSION}.deb debian-binary control.tar.gz data.tar.gz
+rm -rf debian-binary control.tar.gz data.tar.gz data/ control/
+popd

@@ -1,0 +1,9 @@
+Package: {{name}}
+Version: {{version}}
+Section: base
+Priority: optional
+Architecture: all
+Installed-Size: {{size}}
+Depends: nodejs, nodejs-legacy
+Maintainer: Leleux Laurent <lolo88l@hotmail.com>
+Description: {{description}}
