@@ -11,9 +11,10 @@ INSTALLERS_DIR=$6
 cp -r ${SOURCES_DIR}installers/debian/* ${INSTALLERS_DIR}
 
 # Copy sources in package
-cp -r ${SOURCES_DIR}${SHORTNAME} ${INSTALLERS_DIR}data/usr/share/oms/
+mkdir ${INSTALLERS_DIR}data/opt/${NAME}/
+cp -r ${SOURCES_DIR}${SHORTNAME}/* ${INSTALLERS_DIR}data/opt/${NAME}/
 # Copy modules in package
-cp -r ${SOURCES_DIR}node_modules/* ${INSTALLERS_DIR}data/usr/share/oms/${SHORTNAME}/node_modules/
+cp -r ${SOURCES_DIR}node_modules/* ${INSTALLERS_DIR}data/opt/${NAME}/node_modules/
 
 # Adapt init-template
 sed -i "s/{{name}}/${NAME}/g" ${INSTALLERS_DIR}data/etc/init.d/init-template

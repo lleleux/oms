@@ -6,7 +6,7 @@
 DESC="{{description}}"
 NAME={{name}}
 SHORTNAME={{shortname}}
-DAEMON=/usr/share/lib/oms/$SHORTNAME/$SHORTNAME.js
+DAEMON=/opt/$NAME/$SHORTNAME.js
 DAEMON_ARGS=""
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
