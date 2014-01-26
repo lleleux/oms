@@ -4,6 +4,6 @@ Section: base
 Priority: optional
 Architecture: all
 Installed-Size: {{size}}
-Depends: nodejs, nodejs-legacy
+Depends: nodejs, nodejs-legacy, dialog
 Maintainer: Leleux Laurent <lolo88l@hotmail.com>
 Description: {{description}}

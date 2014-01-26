@@ -22,6 +22,10 @@ sed -i "s/{{shortname}}/${SHORTNAME}/g" ${INSTALLERS_DIR}data/etc/init.d/init-te
 sed -i "s/{{description}}/${DESCRIPTION}/g" ${INSTALLERS_DIR}data/etc/init.d/init-template
 mv ${INSTALLERS_DIR}data/etc/init.d/init-template ${INSTALLERS_DIR}data/etc/init.d/${NAME}
 
+# Adapt scripts
+sed -i "s/{{shortname}}/${SHORTNAME}/g" ${INSTALLERS_DIR}control/post* ${INSTALLERS_DIR}control/pre*
+sed -i "s/{{name}}/${NAME}/g" ${INSTALLERS_DIR}control/post* ${INSTALLERS_DIR}control/pre*
+
 # Package the data
 pushd ${INSTALLERS_DIR}data/
 tar -czf ../data.tar.gz *
