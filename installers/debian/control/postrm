@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#---------------------
+#
+# Post-remove script
+#
+# Executed just after the service is removed.
+#
+#---------------------

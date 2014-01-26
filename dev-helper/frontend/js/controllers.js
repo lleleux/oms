@@ -195,8 +195,16 @@ function CommandsCtrl($scope, socket) {
 
 function InstallersCtrl($scope, socket) {
 
+	$scope.installers = [];
+
 	$scope.reload = function () {
 		socket.emit('generateInstallers');
 	};
+
+	socket.on('installers', function (installers) {
+		$scope.installers = installers;
+	})
+
+	socket.emit('getInstallers');
 
 };

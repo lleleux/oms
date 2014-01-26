@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#---------------------
+#
+# Pre-remove script
+#
+# Executed just before the service is removed.
+# It does:
+#	- Stop/remove the service
+#	- Delete logfiles
+#
+#---------------------
+
+
+
+SERVICE_SHORTNAME="{{shortname}}"
+LOG_DIRECTORY="/var/log/oms/"
+LOG_FILE="${LOG_DIRECTORY}${SERVICE_SHORTNAME}.log"
+
+
+
+#----------------
+# Remove service
+#----------------
+
+# Stop service
+/etc/init.d/${SERVICE_SHORTNAME} stop
+# Remove auto-start
+update-rc.d -f ${SERVICE_SHORTNAME} remove
+
+
+
+#-----------------
+# Delete logfiles
+#-----------------
+
+rm -rf ${LOG_FILE}
+[ "$(ls -A ${LOG_DIRECTORY})" ] || rm -rf ${LOG_DIRECTORY}

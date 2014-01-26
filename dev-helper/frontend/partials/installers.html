@@ -6,3 +6,28 @@
 	<h1>Install Packages</h1>
 </div>
 
+<table class="table table-stripped">
+	<thead>
+		<tr>
+			<th>Service</th>
+			<th>Version</th>
+			<th>Date</th>
+			<th>Download</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="installer in installers">
+			<td>{{installer.service}}</td>
+			<td>{{installer.version}}</td>
+			<td>{{installer.date | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+			<td>
+				<a href="{{installer.url}}" target="_self" class="btn btn-default btn-xs" role="button">
+					<span class="glyphicon glyphicon-download"></span> Download
+				</a>
+			</td>
+		</tr>
+		<tr ng-if="installers.length == 0">
+			<td colspan="4">No installers yet... Click on "genetate from Sources" to generate installers</td>
+		</tr>
+	</tbody>
+</table>
