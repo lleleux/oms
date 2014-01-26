@@ -15,18 +15,17 @@
 
 
 SERVICE_SHORTNAME="{{shortname}}"
-BOOTSTRAP_CONFIG_FILE="/etc/oms/bootstrap.properties"
+CONFIG_DIRECTORY="/etc/oms/"
+BOOTSTRAP_CONFIG_FILE="${CONFIG_DIRECTORY}bootstrap.properties"
 LOG_DIRECTORY="/var/log/oms/"
 LOG_FILE="${LOG_DIRECTORY}${SERVICE_SHORTNAME}.log"
 
 
 
-#---------
-# Logging
-#---------
-
 # Create log directory
 [ ! -d "${LOG_DIRECTORY}" ] && mkdir -p ${LOG_DIRECTORY}
+# Create OMS config directory
+[ ! -d "${CONFIG_DIRECTORY}" ] && mkdir -p ${CONFIG_DIRECTORY}
 
 
 
