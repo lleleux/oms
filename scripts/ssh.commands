@@ -1,9 +1,9 @@
 # Return the command results
-ssh-command			=	ssh -q -oStrictHostKeyChecking=no -i {{key}} {{username}}@{{hostname}} sudo {{command}}
+ssh-command			=	ssh -q -oStrictHostKeyChecking=no -i {{key}} {{username}}@{{host}} sudo "{{command}}"
 
-create-file			=	echo "{{base64contents}}" | base64 --decode > {{filename}} && chmod +x {{filename}}
+create-file			=	echo '{{base64contents}}'' | base64 --decode > {{filename}} && chmod +x {{filename}}
 
 # Return 0 if found, other else
 exists				=	ls {{path}}
 
-create-ssh-keys		=	ssh-keygen -t rsa -f {{filename}} -q -N '' -b 4096
+create-ssh-keys		=	ssh-keygen -t rsa -f {{filename}} -q -N '' -b 2048

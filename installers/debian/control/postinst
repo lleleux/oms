@@ -14,6 +14,7 @@
 
 
 
+SERVICE_NAME="{{name}}"
 SERVICE_SHORTNAME="{{shortname}}"
 CONFIG_DIRECTORY="/etc/oms/"
 BOOTSTRAP_CONFIG_FILE="${CONFIG_DIRECTORY}bootstrap.properties"
@@ -82,6 +83,6 @@ fi
 #-------------
 
 # Add auto-start
-update-rc.d ${SERVICE_SHORTNAME} defaults
+update-rc.d ${SERVICE_NAME} defaults
 # Start service
-/etc/init.d/${SERVICE_SHORTNAME} start
+/etc/init.d/${SERVICE_NAME} start
