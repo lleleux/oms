@@ -43,9 +43,6 @@ if [ -z `cat /etc/passwd | egrep "^oms:"` ]; then
 	echo "oms:azerty" | chpasswd
 	# Add in sudoers
 	echo "oms ALL=NOPASSWD:ALL" > /etc/sudoers.d/oms
-	# Add infos in bootstrap config file
-	echo "username = oms" >> ${BOOTSTRAP_CONFIG_FILE}
-	echo "password = azerty" >> ${BOOTSTRAP_CONFIG_FILE}
 	# Logging
 	echo "[Post-install] OMS maintenance user created" >> ${LOG_FILE}
 else
@@ -61,7 +58,10 @@ fi
 if [ ! -f "${BOOTSTRAP_CONFIG_FILE}" ]; then
 	# Logging
 	echo "[Post-install] Creating bootstrap config file..." >> ${LOG_FILE}
-	# Creating file
+	# Add maintenance user infos
+	echo "username = oms" >> ${BOOTSTRAP_CONFIG_FILE}
+	echo "password = azerty" >> ${BOOTSTRAP_CONFIG_FILE}
+	# Get DB infos
 	echo -n "dbHost = " >> ${BOOTSTRAP_CONFIG_FILE}
 	dialog --no-cancel --title 'Database' --inputbox 'Which database must the service connect to ?\n\nPlease enter the hostname or ip:\n' 10 50 2>> ${BOOTSTRAP_CONFIG_FILE} && clear
 	echo >> ${BOOTSTRAP_CONFIG_FILE}
