@@ -13,6 +13,7 @@
 
 
 
+SERVICE_NAME="{{name}}"
 SERVICE_SHORTNAME="{{shortname}}"
 LOG_DIRECTORY="/var/log/oms/"
 LOG_FILE="${LOG_DIRECTORY}${SERVICE_SHORTNAME}.log"
@@ -24,9 +25,9 @@ LOG_FILE="${LOG_DIRECTORY}${SERVICE_SHORTNAME}.log"
 #----------------
 
 # Stop service
-/etc/init.d/${SERVICE_SHORTNAME} stop
+/etc/init.d/${SERVICE_NAME} stop
 # Remove auto-start
-update-rc.d -f ${SERVICE_SHORTNAME} remove
+update-rc.d -f ${SERVICE_NAME} remove
 
 
 
