@@ -14,15 +14,13 @@ function HeaderCtrl($scope, $location) {
  * Main Controller
  */
 
-function ServicesCtrl($scope, $routeParams, socket) {
+function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 
-	$scope.servers = [];
 	$scope.console = {};
 	$scope.config = {};
 
-	socket.emit('getServers');
-
-	socket.on('servers', function (data) {
+	// Set servers
+	var setServers = function (data) {
 		$scope.servers = data;
 		// If a server is selected, add a server value
 		if ($routeParams.hostname) {
@@ -44,10 +42,27 @@ function ServicesCtrl($scope, $routeParams, socket) {
 				}
 			}
 		}
-	});
+	}
+
+	// Get servers
+	$scope.servers = servers.query(
+		function (value, responseHeaders) {
+			setServers(value);
+		},
+		function (httpResponse) {
+			$scope.alert = {
+				type: "danger",
+				message: "Unable to retrieve devices list"
+			};
+		}
+	);
 
 	socket.on('console', function (hostname, service, data) {
 		$scope.console[hostname][service] = data;
+	});
+
+	socket.on('refresh', function (data) {
+		setServers(data);
 	});
 
 	$scope.start = function (hostname, services) {
@@ -70,6 +85,16 @@ function ServicesCtrl($scope, $routeParams, socket) {
 		return links[service];
 	};
 
+	$scope.deleteServer = function (serverId) {
+		servers.delete({id: serverId});
+		$('#delete').modal('hide');
+	};
+
+	$scope.deleteService = function (serverId, serviceName) {
+		servers.deleteService({id: serverId, name: serviceName});
+		$('#delete').modal('hide');
+	};
+
 	$scope.$on('$destroy', function (event) {
 		socket.removeAllListeners();
 	});
@@ -82,13 +107,17 @@ function ServicesCtrl($scope, $routeParams, socket) {
  * API Doc Controller
  */
 
-function ApiDocCtrl($scope, socket, apiDoc) {
+function ApiDocCtrl($scope, docApi) {
 
-	socket.emit('getApiDoc');
-
-	socket.on('apiDoc', function (data) {
-		$scope.apis = JSON.parse(data);
-	});
+	// Get API documentation
+	$scope.apis = docApi.query(
+		function (value, responseHeaders) {
+			$scope.apis = value;
+		},
+		function (httpResponse) {
+			$scope.alert = {type: "danger", message: "Unable to retrieve documentation"};
+		}
+	);
 
 	$scope.getClassForMethod = function (method) {
 		switch (method.toUpperCase()) {
@@ -105,8 +134,16 @@ function ApiDocCtrl($scope, socket, apiDoc) {
 		}
 	};
 
+	// Reload the API documentation from sources
 	$scope.reload = function () {
-		socket.emit('reloadApiDoc');
+		$scope.apis = docApi.reload(
+			function (value, responseHeaders) {
+				$scope.alert = {type: "success", message: "Request sent"};
+			},
+			function (httpResponse) {
+				$scope.alert = {type: "danger", message: "Unable to send the request, server is down ?"};
+			}
+		);
 	};
 
 	$scope.execute = function (route, routeNumber) {
@@ -138,10 +175,6 @@ function ApiDocCtrl($scope, socket, apiDoc) {
 				route.headers = headers();
 			})
 	};
-
-	$scope.$on('$destroy', function (event) {
-		socket.removeAllListeners();
-	});
 
 };
 

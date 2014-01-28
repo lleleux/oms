@@ -47,3 +47,38 @@
 		<span class="glyphicon glyphicon-repeat"></span> Restart
 	</button>
 </div>
+
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#delete">
+	<span class="glyphicon glyphicon-trash"></span> Delete service
+</button>
+
+<br><br>
+
+
+
+<!-- Delete confirmation -->
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<!-- Header -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Are you sure ?</h4>
+			</div>
+			<!-- Body -->
+			<div class="modal-body">
+			<p>
+			Are you sure to delete the following service?<br><br>
+			Server: {{server.hostname}}<br>
+			Service: {{service.name}}<br>
+			Status: {{service.status}}<br>
+			</p>
+			</div>
+			<!-- Footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary" ng-click="deleteService(server._id, service.name);">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>

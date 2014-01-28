@@ -7,6 +7,11 @@ VERSION=$4
 SOURCES_DIR=$5
 INSTALLERS_DIR=$6
 
+# Remove quotes from description
+temp="${DESCRIPTION%\"}"
+temp="${temp#\"}"
+DESCRIPTION="$temp"
+
 # Copy debian package structure
 cp -r ${SOURCES_DIR}installers/debian/* ${INSTALLERS_DIR}
 

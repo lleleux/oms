@@ -22,11 +22,11 @@ devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProv
 		templateUrl: '/partials/services.html',
 		controller: 'ServicesCtrl'
 	});
-	$routeProvider.when('/api/doc', {
+	$routeProvider.when('/doc/api', {
 		templateUrl: '/partials/apiDoc.html',
 		controller: 'ApiDocCtrl'
 	});
-	$routeProvider.when('/api/commands', {
+	$routeProvider.when('/doc/commands', {
 		templateUrl: '/partials/commands.html',
 		controller: 'CommandsCtrl'
 	});
@@ -95,8 +95,17 @@ devHelperApp.factory('socket', function ($rootScope) {
 
 });
 
-devHelperApp.factory('apiDoc', ['$resource', function ($resource) {
-	return $resource('http://localhost:8083/doc/api/', {}, {
-		reload:	{method: 'POST', url: 'http://localhost:8083/doc/api/reload'}
-	});
+devHelperApp.factory('docApi', ['$resource', function ($resource) {
+	return $resource('http://localhost:8082/api/doc/api/', {}, {reload: {method: 'POST', url: 'http://localhost:8082/api/doc/api/reload'}});
+}]);
+
+devHelperApp.factory('servers', ['$resource', function ($resource) {
+	var actions = {
+		deleteService: {
+			method:'DELETE',
+			url: 'http://localhost:8082/api/server/:id/service/:name',
+			params: {id: '@id', name: '@name'}
+		}
+	};
+	return $resource('http://localhost:8082/api/server/:id', {id: '@id'}, actions);
 }]);

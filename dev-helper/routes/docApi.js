@@ -16,6 +16,8 @@
 // Global
 var logger = require('logger');
 var Dao = require('db').Dao;
+// Custom
+var apiAnalyzer = require('apiAnalyzer');
 
 
 
@@ -46,8 +48,27 @@ var findAll = function (request, response) {
 
 
 /**
+ * Reload the api documentation.
+ * This method get the source code from git, and
+ * parse it to retrieve all the documentation.
+ * The doc is then stored in database to get it
+ * easily.
+ *
+ * @method	reload
+ * @name	Reload the API documentation from source code
+ */
+
+var reload = function (request, response) {
+	apiAnalyzer.analyze();
+	response.send(200);
+};
+
+
+
+/**
  * Exports
  */
 
 // methods
 exports.findAll = findAll;
+exports.reload = reload;
