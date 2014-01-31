@@ -1,0 +1,7 @@
+git-clone			=	git clone {{url}} {{destination}}
+
+create-ssh-keys		=	ssh-keygen -t rsa -f {{filename}} -q -N '' -b 2048
+
+get-logs			=	tail -n {{lines}} {{filename}}
+
+stream-logs			=	tail -f -n {{lines}} {{filename}}

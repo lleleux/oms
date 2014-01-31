@@ -1,2 +1,0 @@
-get-logs		=	tail -n {{lines}} {{filename}}
-stream-logs		=	tail -f -n {{lines}} {{filename}}

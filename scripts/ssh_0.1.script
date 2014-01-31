@@ -1,0 +1,107 @@
+#! /bin/bash
+
+
+
+#---------------------
+# Usage help function
+#---------------------
+
+function usage {
+echo "
+USAGE:
+	$0 command username host key-file ...
+
+DESCRIPTION:
+	This script is used to execute commands and script on a remote server through SSH.
+	All the commands and script must be passed base64 encoded.
+	Arguments for a script call may not be base 64 encoded.
+
+COMMANDS:
+	check-script	... script-file
+	copy-script		... script-file script
+	command			... command
+	script			... script-file [arguments]
+"
+}
+
+
+
+#---------------------------
+# Get command and arguments
+#---------------------------
+
+COMMAND=$1
+shift
+USERNAME=$1
+shift
+HOST=$1
+shift
+KEY_FILE=$1
+shift
+
+
+
+#---------------------
+# Execute the command
+#---------------------
+
+case "${COMMAND}" in
+
+	# Check if the script is on the server
+	"check-script")
+		SCRIPT_FILE=$1
+		ssh -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo ls ${SCRIPT_FILE}
+		exit $?
+		;;
+
+	# Copy script
+	"copy-script")
+		# Get arguments
+		SCRIPT_FILE=$1
+		BASE64=$2
+		# Copy script
+		LOCAL_TMP_FILE=`mktemp`
+		REMOTE_TMP_FILE="${LOCAL_TMP_FILE}2"
+		echo "${BASE64}" | base64 -d > ${LOCAL_TMP_FILE}
+		scp -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${LOCAL_TMP_FILE} ${USERNAME}@${HOST}:${REMOTE_TMP_FILE}
+		rm -f ${LOCAL_TMP_FILE}
+		ssh -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo chmod +x ${REMOTE_TMP_FILE}; sudo mv ${REMOTE_TMP_FILE} ${SCRIPT_FILE};
+		;;
+
+	# Execute a command on the host
+	"command")
+		# Get arguments
+		BASE64=$1
+		# Copy script with command
+		LOCAL_TMP_FILE=`mktemp`
+		REMOTE_TMP_FILE="${LOCAL_TMP_FILE}2"
+		echo "${BASE64}" | base64 -d > ${LOCAL_TMP_FILE}
+		scp -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${LOCAL_TMP_FILE} ${USERNAME}@${HOST}:${REMOTE_TMP_FILE}
+		rm -f ${LOCAL_TMP_FILE}
+		# Execute
+		ssh -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo chmod +x ${REMOTE_TMP_FILE}; sudo bash ${REMOTE_TMP_FILE}; sudo rm -f ${REMOTE_TMP_FILE}
+		;;
+
+	# Execute a script on the host
+	"script")
+		# Get arguments
+		SCRIPT_AND_ARGUMENTS="$@"
+		# Copy script with command
+		LOCAL_TMP_FILE=`mktemp`
+		REMOTE_TMP_FILE="${LOCAL_TMP_FILE}2"
+		echo "${SCRIPT_AND_ARGUMENTS}" > ${LOCAL_TMP_FILE}
+		scp -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${LOCAL_TMP_FILE} ${USERNAME}@${HOST}:${REMOTE_TMP_FILE}
+		rm -f ${LOCAL_TMP_FILE}
+		# Execute
+		ssh -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo chmod +x ${REMOTE_TMP_FILE}; sudo bash ${REMOTE_TMP_FILE}; sudo rm -f ${REMOTE_TMP_FILE}
+		;;
+
+	# Default when the command is not recognized
+	*)
+		echo "Invalid command !"
+		exit 1
+		;;
+
+esac
+
+exit 0

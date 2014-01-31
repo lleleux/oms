@@ -1,0 +1,11 @@
+# Copy script to server
+copy-script			=	copy-script {{username}} {{host}} {{key}} {{filename}} {{script}}
+
+# Check if a script is stored on the server
+check-script		=	check-script {{username}} {{host}} {{key}} {{filename}}
+
+# Execute a command on the server
+sshCommand			=	command {{username}} {{host}} {{key}} {{command}}
+
+# Execute a script on the server
+sshScript			=	script {{username}} {{host}} {{key}} {{filename}} {{arguments}}

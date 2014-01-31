@@ -96,16 +96,16 @@ devHelperApp.factory('socket', function ($rootScope) {
 });
 
 devHelperApp.factory('docApi', ['$resource', function ($resource) {
-	return $resource('http://localhost:8082/api/doc/api/', {}, {reload: {method: 'POST', url: 'http://localhost:8082/api/doc/api/reload'}});
+	return $resource('/api/doc/api/', {}, {reload: {method: 'POST', url: '/api/doc/api/reload'}});
 }]);
 
 devHelperApp.factory('servers', ['$resource', function ($resource) {
 	var actions = {
 		deleteService: {
 			method:'DELETE',
-			url: 'http://localhost:8082/api/server/:id/service/:name',
+			url: '/api/server/:id/service/:name',
 			params: {id: '@id', name: '@name'}
 		}
 	};
-	return $resource('http://localhost:8082/api/server/:id', {id: '@id'}, actions);
+	return $resource('/api/server/:id', {id: '@id'}, actions);
 }]);
