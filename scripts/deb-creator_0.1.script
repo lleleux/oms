@@ -1,15 +1,18 @@
 #! /bin/bash
 
-NAME=$1
-SHORTNAME=$2
-DESCRIPTION=$3
-VERSION=$4
-SOURCES_DIR=$5
-INSTALLERS_DIR=$6
+TYPE=$1				# Service/agent
+NAME=$2
+SHORTNAME=$3
+DESCRIPTION=$4
+VERSION=$5
+SOURCES_DIR=$6
+INSTALLERS_DIR=$7
+KEY=$8				# Only if agent
+CERTIFICATE=$9		# Only if agent
 
 # Remove quotes from description
-temp="${DESCRIPTION%\"}"
-temp="${temp#\"}"
+temp="${DESCRIPTION%\'}"
+temp="${temp#\'}"
 DESCRIPTION="$temp"
 
 # Copy debian package structure
@@ -20,6 +23,26 @@ mkdir -p ${INSTALLERS_DIR}data/opt/${NAME}/
 cp -r ${SOURCES_DIR}${SHORTNAME}/* ${INSTALLERS_DIR}data/opt/${NAME}/
 # Copy modules in package
 cp -r ${SOURCES_DIR}node_modules/* ${INSTALLERS_DIR}data/opt/${NAME}/node_modules/
+
+# Delete unused scripts
+for script in `ls ${INSTALLERS_DIR}control/ | egrep -v ${TYPE}_*`; do
+	rm -f $script
+done
+# Rename good scripts
+for script in `ls ${INSTALLERS_DIR}control/`; do
+	mv $script `echo $script | sed "s/${TYPE}_//g"`
+done
+
+# If agent, add key and certificate
+if [ "${TYPE}" == "agent" ]; then
+	echo -n "${KEY}"								> ${INSTALLERS_DIR}data/etc/oms/agent.key
+	echo -n "${CERTIFICATE}"						> ${INSTALLERS_DIR}data/etc/oms/agent.crt
+	echo -n "reconnectionDelay = 3000"				> ${INSTALLERS_DIR}data/etc/oms/agent.properties
+	echo -n "tlsPrivateKey = /etc/oms/agent.key"	>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
+	echo -n "tlsCertificate = /etc/oms/agent.crt"	>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
+	echo -n "scriptsDir = /etc/oms/scripts/"		>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
+	echo -n "encoding = UTF-8"						>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
+fi
 
 # Adapt init-template
 sed -i "s/{{name}}/${NAME}/g" ${INSTALLERS_DIR}data/etc/init.d/init-template

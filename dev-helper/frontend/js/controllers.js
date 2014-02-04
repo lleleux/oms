@@ -107,7 +107,7 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
  * API Doc Controller
  */
 
-function ApiDocCtrl($scope, docApi) {
+function ApiDocCtrl($scope, docApi, $http) {
 
 	// Get API documentation
 	$scope.apis = docApi.query(

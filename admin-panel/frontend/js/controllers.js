@@ -36,7 +36,7 @@ function DevicesCtrl($scope, devices) {
  * Installs Controller
  */
 
-function InstallsCtrl($scope, $window, installs) {
+function InstallsCtrl($scope, $window, installs, socket) {
 
 	$scope.add = function () {
 		var d = new Date();
@@ -81,6 +81,10 @@ function InstallsCtrl($scope, $window, installs) {
 		var file = $window.open();
 		file.document.write('<pre>' + contents + '</pre>');
 		file.focus();
+	};
+
+	$scope.downloadInstaller = function (agentId) {
+		socket.emit('generateInstaller', {agentId: agentId});
 	};
 
 	$scope.accept = function (install) {

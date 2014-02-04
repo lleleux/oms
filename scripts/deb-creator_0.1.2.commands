@@ -1,1 +1,0 @@
-create-service-installer		=	{{name}} {{shortname}} '{{description}}' {{version}} {{sourcesDir}} {{installersDir}}

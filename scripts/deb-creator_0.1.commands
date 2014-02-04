@@ -1,0 +1,3 @@
+create-service-installer		=	service {{name}} {{shortname}} '{{description}}' {{version}} {{sourcesDir}} {{installersDir}}
+
+create-agent-installer			=	agent {{name}} {{shortname}} '{{description}}' {{version}} {{sourcesDir}} {{installersDir}} '{{key}}' '{{certificate}}'

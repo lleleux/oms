@@ -1,0 +1,88 @@
+#!/bin/bash
+
+#---------------------
+#
+# Post-install script
+#
+# Executed when the agent is just installed.
+# It does:
+#	- Ask Server connection infos
+#	- Ask gui port
+#	- Add/Start the service
+#
+#---------------------
+
+
+
+SERVICE_NAME="{{name}}"
+SERVICE_SHORTNAME="{{shortname}}"
+CONFIG_DIRECTORY="/etc/oms/"
+BOOTSTRAP_CONFIG_FILE="${CONFIG_DIRECTORY}bootstrap.properties"
+LOG_DIRECTORY="/var/log/oms/"
+LOG_FILE="${LOG_DIRECTORY}${SERVICE_SHORTNAME}.log"
+
+
+
+# Create log directory
+[ ! -d "${LOG_DIRECTORY}" ] && mkdir -p ${LOG_DIRECTORY}
+# Create OMS config directory
+[ ! -d "${CONFIG_DIRECTORY}" ] && mkdir -p ${CONFIG_DIRECTORY}
+
+
+
+#----------
+# Add user
+#----------
+
+if [ -z `cat /etc/passwd | egrep "^oms:"` ]; then
+	# Logging
+	echo "[Post-install] Creating oms maintenance user..." >> ${LOG_FILE}
+	# Add user
+	useradd -r -d /tmp/oms -s /bin/bash oms
+	# Change password
+	echo "oms:azerty" | chpasswd
+	# Add in sudoers
+	echo "oms ALL=NOPASSWD:ALL" > /etc/sudoers.d/oms
+	# Logging
+	echo "[Post-install] OMS maintenance user created" >> ${LOG_FILE}
+else
+	echo "[Post-install] OMS maintenance user found, no need to create one" >> ${LOG_FILE}
+fi
+
+
+
+#-----------------------------
+# Ask for MongoDB information
+#-----------------------------
+
+if [ ! -f "${BOOTSTRAP_CONFIG_FILE}" ]; then
+	# Logging
+	echo "[Post-install] Creating bootstrap config file..." >> ${LOG_FILE}
+	# Add maintenance user infos
+	echo "username = oms" >> ${BOOTSTRAP_CONFIG_FILE}
+	echo "password = azerty" >> ${BOOTSTRAP_CONFIG_FILE}
+	# Get DB infos
+	echo -n "dbHost = " >> ${BOOTSTRAP_CONFIG_FILE}
+	dialog --no-cancel --title 'Database' --inputbox 'Which database must the service connect to ?\n\nPlease enter the hostname or ip:\n' 10 50 2>> ${BOOTSTRAP_CONFIG_FILE} && clear
+	echo >> ${BOOTSTRAP_CONFIG_FILE}
+	echo -n "dbPort = " >> ${BOOTSTRAP_CONFIG_FILE}
+	dialog --no-cancel --title 'Database' --inputbox 'Which database must the service connect to ?\n\nPlease enter the port number:\n' 10 50 2>> ${BOOTSTRAP_CONFIG_FILE} && clear
+	echo >> ${BOOTSTRAP_CONFIG_FILE}
+	echo "omsDB = oms" >> ${BOOTSTRAP_CONFIG_FILE}
+	echo "docDB = doc" >> ${BOOTSTRAP_CONFIG_FILE}
+	# Logging
+	echo "[Post-install] Bootstrap config file created" >> ${LOG_FILE}
+else
+	echo "[Post-install] Bootstrap config file found, no need to create one" >> ${LOG_FILE}
+fi
+
+
+
+#-------------
+# Add service
+#-------------
+
+# Add auto-start
+update-rc.d ${SERVICE_NAME} defaults
+# Start service
+/etc/init.d/${SERVICE_NAME} start
