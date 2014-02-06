@@ -63,10 +63,10 @@ if [ ! -f "${BOOTSTRAP_CONFIG_FILE}" ]; then
 	echo "password = azerty" >> ${BOOTSTRAP_CONFIG_FILE}
 	# Get DB infos
 	echo -n "dbHost = " >> ${BOOTSTRAP_CONFIG_FILE}
-	dialog --no-cancel --title 'Database' --inputbox 'Which database must the service connect to ?\n\nPlease enter the hostname or ip:\n' 10 50 2>> ${BOOTSTRAP_CONFIG_FILE} && clear
+	dialog --no-cancel --title 'Database' --inputbox 'Which database must the service connect to?\n\nPlease enter the hostname or ip:\n' 10 50 2>> ${BOOTSTRAP_CONFIG_FILE} && clear
 	echo >> ${BOOTSTRAP_CONFIG_FILE}
 	echo -n "dbPort = " >> ${BOOTSTRAP_CONFIG_FILE}
-	dialog --no-cancel --title 'Database' --inputbox 'Which database must the service connect to ?\n\nPlease enter the port number:\n' 10 50 2>> ${BOOTSTRAP_CONFIG_FILE} && clear
+	dialog --no-cancel --title 'Database' --inputbox 'Which database must the service connect to?\n\nPlease enter the port number:\n' 10 50 2>> ${BOOTSTRAP_CONFIG_FILE} && clear
 	echo >> ${BOOTSTRAP_CONFIG_FILE}
 	echo "omsDB = oms" >> ${BOOTSTRAP_CONFIG_FILE}
 	echo "docDB = doc" >> ${BOOTSTRAP_CONFIG_FILE}

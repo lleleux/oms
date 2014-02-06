@@ -38,6 +38,15 @@ function DevicesCtrl($scope, devices) {
 
 function InstallsCtrl($scope, $window, installs, socket) {
 
+	socket.on('installer', function (agentId) {
+		$('#download' + agentId).button('reset');
+		window.location.assign('/files/installers/' + agentId + '.deb');
+	});
+
+	socket.on('generatingInstaller', function (agentId) {
+		$('#download' + agentId).button('loading');
+	});
+
 	$scope.add = function () {
 		var d = new Date();
 		$scope.install.creation = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
@@ -84,7 +93,7 @@ function InstallsCtrl($scope, $window, installs, socket) {
 	};
 
 	$scope.downloadInstaller = function (agentId) {
-		socket.emit('generateInstaller', {agentId: agentId});
+		socket.emit('getInstaller', {agentId: agentId});
 	};
 
 	$scope.accept = function (install) {

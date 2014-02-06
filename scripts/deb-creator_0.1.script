@@ -9,11 +9,18 @@ SOURCES_DIR=$6
 INSTALLERS_DIR=$7
 KEY=$8				# Only if agent
 CERTIFICATE=$9		# Only if agent
+AGENT_ID=${10}		# Only if agent
 
-# Remove quotes from description
+# Remove quotes from strings
 temp="${DESCRIPTION%\'}"
 temp="${temp#\'}"
 DESCRIPTION="$temp"
+temp="${KEY%\'}"
+temp="${temp#\'}"
+KEY="$temp"
+temp="${CERTIFICATE%\'}"
+temp="${temp#\'}"
+CERTIFICATE="$temp"
 
 # Copy debian package structure
 cp -r ${SOURCES_DIR}installers/debian/* ${INSTALLERS_DIR}
@@ -26,22 +33,23 @@ cp -r ${SOURCES_DIR}node_modules/* ${INSTALLERS_DIR}data/opt/${NAME}/node_module
 
 # Delete unused scripts
 for script in `ls ${INSTALLERS_DIR}control/ | egrep -v ${TYPE}_*`; do
-	rm -f $script
+	rm -f ${INSTALLERS_DIR}control/$script
 done
 # Rename good scripts
 for script in `ls ${INSTALLERS_DIR}control/`; do
-	mv $script `echo $script | sed "s/${TYPE}_//g"`
+	mv ${INSTALLERS_DIR}control/$script ${INSTALLERS_DIR}control/`echo $script | sed "s/${TYPE}_//g"`
 done
 
 # If agent, add key and certificate
 if [ "${TYPE}" == "agent" ]; then
-	echo -n "${KEY}"								> ${INSTALLERS_DIR}data/etc/oms/agent.key
-	echo -n "${CERTIFICATE}"						> ${INSTALLERS_DIR}data/etc/oms/agent.crt
-	echo -n "reconnectionDelay = 3000"				> ${INSTALLERS_DIR}data/etc/oms/agent.properties
-	echo -n "tlsPrivateKey = /etc/oms/agent.key"	>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
-	echo -n "tlsCertificate = /etc/oms/agent.crt"	>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
-	echo -n "scriptsDir = /etc/oms/scripts/"		>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
-	echo -n "encoding = UTF-8"						>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
+	mkdir -p ${INSTALLERS_DIR}data/etc/oms/
+	echo "${KEY}"								> ${INSTALLERS_DIR}data/etc/oms/agent.key
+	echo "${CERTIFICATE}"						> ${INSTALLERS_DIR}data/etc/oms/agent.crt
+	echo "reconnectionDelay = 3000"				> ${INSTALLERS_DIR}data/etc/oms/agent.properties
+	echo "tlsPrivateKey = /etc/oms/agent.key"	>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
+	echo "tlsCertificate = /etc/oms/agent.crt"	>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
+	echo "scriptsDir = /etc/oms/scripts/"		>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
+	echo "encoding = UTF-8"						>> ${INSTALLERS_DIR}data/etc/oms/agent.properties
 fi
 
 # Adapt init-template
@@ -73,6 +81,10 @@ popd
 
 # Package the *.deb and clean
 pushd ${INSTALLERS_DIR}
-ar r ${NAME}_${VERSION}.deb debian-binary control.tar.gz data.tar.gz
+if [ "${TYPE}" == "agent" ]; then
+	ar r ${AGENT_ID}.deb debian-binary control.tar.gz data.tar.gz
+else
+	ar r ${NAME}_${VERSION}.deb debian-binary control.tar.gz data.tar.gz
+fi
 rm -rf debian-binary control.tar.gz data.tar.gz data/ control/
 popd
