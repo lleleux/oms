@@ -68,8 +68,6 @@ function InstallsCtrl($scope, $window, installs, socket) {
 			{id: id},
 			function () {
 				$scope.refresh();
-			},
-			function () {
 			}
 		);
 		// Hide modal
@@ -96,20 +94,24 @@ function InstallsCtrl($scope, $window, installs, socket) {
 		socket.emit('getInstaller', {agentId: agentId});
 	};
 
-	$scope.accept = function (install) {
-/*$http({ method: 'GET', url: '/foo' }).
-  success(function (data, status, headers, config) {
-    // ...
-  }).
-  error(function (data, status, headers, config) {
-    // ...
-  });*/
+	$scope.accept = function (id) {
+		installs.accept(
+			{id: id},
+			function () {$scope.refresh();}
+		);
 	};
 
-	$scope.reject = function (install) {
-
+	$scope.reject = function (id) {
+		installs.reject(
+			{id: id},
+			function () {$scope.refresh();}
+		);
 	};
 
 	$scope.refresh();
+
+	$scope.$on('$destroy', function (event) {
+		socket.removeAllListeners();
+	});
 
 };

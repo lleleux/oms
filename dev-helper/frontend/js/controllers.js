@@ -163,7 +163,7 @@ function ApiDocCtrl($scope, docApi, $http) {
 		if (error) {
 			return;
 		}
-		$http.get('http://localhost:8083' + url)
+		$http[route.method]('http://localhost:8083' + url)
 			.success(function (data, status, headers, config) {
 				route.data = data;
 				route.status = status;

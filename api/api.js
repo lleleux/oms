@@ -31,7 +31,10 @@ var server;
 
 
 /**
- * Graceful exit callback
+ * Graceful exit callback, called when
+ * the application is killed or exited.
+ *
+ * @callback function called when the callback is done
  */
 
 var gracefulExit = function (callback) {
@@ -46,7 +49,7 @@ var gracefulExit = function (callback) {
 
 /**
  * Bootstrap the application.
- * Start the GUI.
+ * Start the Server.
  */
 
 bootstrap.bootstrap('oms-api', gracefulExit, function () {

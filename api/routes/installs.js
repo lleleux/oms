@@ -15,7 +15,7 @@
 
 // Global
 var logger = require('logger');
-var Dao = require('db').Dao;
+var db = require('db');
 // Custom
 var ca = require('ca');
 
@@ -26,8 +26,8 @@ var ca = require('ca');
  */
 
 // DAO
-var installs = new Dao('installs');
-var devices = new Dao('devices');
+var installsDao = new db.Dao('installs');
+var devicesDao = new db.Dao('devices');
 
 
 
@@ -40,7 +40,7 @@ var devices = new Dao('devices');
  */
 
 var findById = function(request, response) {
-	installs.findById(request.params.id, function (item) {
+	installsDao.findById(request.params.id, function (item) {
 		response.send(item);
 	});
 };
@@ -55,7 +55,7 @@ var findById = function(request, response) {
  */
 
 var findAll = function(request, response) {
-	installs.findAll(function (items) {
+	installsDao.findAll(function (items) {
 		response.send(items);
 	});
 };
@@ -73,9 +73,10 @@ var findAll = function(request, response) {
  */
 
 var insert = function(request, response) {
-	installs.insert(request.body, function (result) {
+	request.body.status = 'created';
+	installsDao.insert(request.body, function (result) {
 		ca.initializeAgent(result[0]._id, function () {
-			installs.findById(result[0]._id, function (item) {
+			installsDao.findById(result[0]._id, function (item) {
 				response.send(item);
 			});
 		});
@@ -94,7 +95,7 @@ var insert = function(request, response) {
  */
 
 var update = function(request, response) {
-	installs.update(request.params.id, request.body, function (result) {
+	installsDao.update(request.params.id, request.body, function (result) {
 		response.send({count: result});
 	});
 };
@@ -110,7 +111,7 @@ var update = function(request, response) {
  */
 
 var remove = function(request, response) {
-	installs.remove(request.params.id, function (result) {
+	installsDao.remove(request.params.id, function (result) {
 		response.send({count: result});
 	});
 };
@@ -131,13 +132,22 @@ var remove = function(request, response) {
  * @param 	id {String} required The id of the installation to accept
  */
 var accept = function (request, response) {
-	installs.findById(request.params.id, function (install) {
-		var id = install._id;
-		delete(install._id);
-		devices.insert({_id: id, agent: install}, function (device) {
-			installs.remove(request.params.id);
-			response.send(200);
-		});
+	installsDao.findById(request.params.id, function (install) {
+		if (install) {
+			if (install.status === 'installed') {
+				delete(install._id);
+				install.status = 'accepted';
+				install.acceptedDate = new Date().getTime();
+				devicesDao.insert({_id: new db.BSON.ObjectID(request.params.id), agent: install}, function (device) {
+					installsDao.remove(request.params.id);
+					response.send(200);
+				});
+			} else {
+				response.send(409, {error: 'Agent must be in status "installed" to be accepted. Current status: ' + install.status});
+			}
+		} else {
+			response.send(404, {error: 'Agent not found'});
+		}
 	});
 };
 
@@ -152,10 +162,20 @@ var accept = function (request, response) {
  * @param 	reason {String} optional The reason of the reject
  */
 var reject = function (request, response) {
-	ca.banAgent(request.params.id, function () {
-		installs.update(request.params.id, {status: 'banned', reason: request.params.reason});
+	installsDao.findById(request.params.id, function (install) {
+		if (install) {
+			if (install.status === 'installed') {
+				installsDao.update(request.params.id, {status: 'banned', banDate: new Date().getTime(), reason: request.params.reason}, function (result) {
+					ca.generateCrl();
+					response.send(200);
+				});
+			} else {
+				response.send(409, {error: 'Agent must be in status "installed" to be rejected. Current status: ' + install.status});
+			}
+		} else {
+			response.send(404, {error: 'Agent not found'});
+		}
 	});
-	response.send(200);
 };
 
 

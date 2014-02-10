@@ -7,17 +7,17 @@
 		<tr>
 			<th>Logo</th>
 			<th>Name</th>
-			<th>IP</th>
-			<th>Login</th>
+			<th>Description</th>
+			<th>Status</th>
 			<th>Password</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr ng-repeat="device in devices">
 			<td>Example</td>
-			<td>{{device.name}}</td>
-			<td>Example</td>
-			<td>Example</td>
+			<td>{{device.agent.name}}</td>
+			<td>{{device.agent.description}}</td>
+			<td>{{device.agent.status}}</td>
 			<td>Example</td>
 		</tr>
 	</tbody>

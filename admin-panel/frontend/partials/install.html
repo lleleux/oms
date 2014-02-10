@@ -7,6 +7,7 @@
 		<tr>
 			<th>Name</th>
 			<th>Description</th>
+			<th>Status</th>
 			<th>Creation</th>
 			<th>Activation</th>
 			<th>Expiration</th>
@@ -17,11 +18,12 @@
 		<tr ng-repeat="install in installs">
 			<td>{{install.name}}</td>
 			<td>{{install.description}}</td>
+			<td>{{install.status}}</td>
 			<td>{{install.creation}}</td>
-			<td>{{install.activation | date:'dd/MM/yyyy HH:mm:ss'}}</td>
-			<td>{{install.expiration}}</td>
+			<td>{{install.activationDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+			<td>{{install.expirationDate}}</td>
 			<td>
-				<div class="btn-group" ng-if="!install.activation">
+				<div class="btn-group" ng-if="!install.activationDate">
 					<button id="download{{install._id}}" type="button" class="btn btn-default btn-xs" ng-if="install.certificate" ng-click="downloadInstaller(install._id);" data-loading-text="Generating...">
 						<span class="glyphicon glyphicon-download"></span> Installer
 					</button>
@@ -29,11 +31,11 @@
 						<span class="glyphicon glyphicon-trash"></span> Delete
 					</button>
 				</div>
-				<div class="btn-group" ng-if="install.activation">
-					<button type="button" class="btn btn-default btn-xs" ng-click="accept(install)">
+				<div class="btn-group" ng-if="install.activationDate">
+					<button type="button" class="btn btn-default btn-xs" ng-click="accept(install._id)">
 						<span class="glyphicon glyphicon-ok"></span> Accept
 					</button>
-					<button type="button" class="btn btn-default btn-xs" ng-click="reject(install)">
+					<button type="button" class="btn btn-default btn-xs" ng-click="reject(install._id)">
 						<span class="glyphicon glyphicon-remove"></span> Reject
 					</button>
 				</div>
@@ -73,8 +75,8 @@
 						<input type="text" class="form-control" ng-model="install.description" required>
 					</div>
 					<div class="form-group">
-						<label for="expiration">Expiration date</label>
-						<input type="date" class="form-control" ng-model="install.expiration" required>
+						<label for="expirationDate">Expiration date</label>
+						<input type="date" class="form-control" ng-model="install.expirationDate" required>
 					</div>
 				</form>
 			</div>
@@ -100,9 +102,10 @@
 			<div class="modal-body">
 			<p>
 			Are you sure to delete the following install?<br><br>
-			Name : {{selected.name}}<br>
-			Description : {{selected.description}}<br>
-			Expiration : {{selected.expiration}}
+			Name: {{selected.name}}<br>
+			Description: {{selected.description}}<br>
+			Status: {{selected.status}}<br>
+			Expiration: {{selected.expirationDate}}
 			</p>
 			</div>
 			<!-- Footer -->

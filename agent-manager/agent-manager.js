@@ -28,7 +28,10 @@ var agentCommander;
 
 
 /**
- * Graceful exit callback
+ * Graceful exit callback, called when
+ * the application is killed or exited.
+ *
+ * @callback function called when the callback is done
  */
 
 var gracefulExit = function (callback) {

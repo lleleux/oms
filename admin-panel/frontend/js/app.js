@@ -26,11 +26,26 @@ adminPanelApp.config(['$routeProvider', '$locationProvider', function ($routePro
 }]);
 
 adminPanelApp.factory('devices', ['$resource', function ($resource) {
-	return $resource('http://localhost:8083/device/:id', {id: '@id'}, {update: {method:'PUT'}});
+	return $resource('http://localhost:8083/device/:id', {id: '@id'}, {
+		update: {method: 'PUT'}
+	});
 }]);
 
 adminPanelApp.factory('installs', ['$resource', function ($resource) {
-	return $resource('http://localhost:8083/install/:id', {id: '@id'}, {update: {method:'PUT'}});
+	var actions = {
+		update: {
+			method:		'PUT'
+		},
+		accept: {
+			method:		'POST',
+			url:		'http://localhost:8083/install/:id/accept'
+		},
+		reject: {
+			method:		'POST',
+			url:		'http://localhost:8083/install/:id/reject'
+		}
+	};
+	return $resource('http://localhost:8083/install/:id', {id: '@id'}, actions);
 }]);
 
 /**

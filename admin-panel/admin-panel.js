@@ -3,8 +3,7 @@
  *
  * Main application.
  *
- * Hold the model.
- * Start the GUI.
+ * Start the Server with the GUI.
  *
  * =============================
  *
@@ -20,23 +19,26 @@
 
 
 /**
- * Load modules
+ * Declare modules
  */
 
 // Global
 var bootstrap = require('bootstrap');
 // Custom
-var gui;
+var server;
 
 
 
 /**
- * Graceful exit callback
+ * Graceful exit callback, called when
+ * the application is killed or exited.
+ *
+ * @callback function called when the callback is done
  */
 
 var gracefulExit = function (callback) {
-	if (gui) {
-		gui.stop(callback);
+	if (server) {
+		server.stop(callback);
 	} else {
 		if (callback) callback();
 	}
@@ -46,12 +48,12 @@ var gracefulExit = function (callback) {
 
 /**
  * Bootstrap the application.
- * Start the GUI.
+ * Start the Server.
  */
 
 bootstrap.bootstrap('oms-admin-panel', gracefulExit, function () {
 	// Load Modules
-	gui = require('gui');
+	server = require('server');
 	// Start
-	gui.start();
+	server.start();
 });
