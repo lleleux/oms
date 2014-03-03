@@ -72,6 +72,50 @@
 
 
 
+<h2>Configuration</h2>
+
+<table class="table table-stripped">
+	<thead>
+		<tr>
+			<th>Key</th>
+			<th>Value</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="(key, value) in server.config">
+			<!-- VIEW -->
+			<td class="config-{{key}}-view">{{key}}</td>
+			<td class="config-{{key}}-view">{{value | limitTo:40}}</td>
+			<td class="config-{{key}}-view">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default btn-xs" ng-click="setEditable(true, key)">
+						<span class="glyphicon glyphicon-pencil"></span> Edit
+					</button>
+					<button type="button" class="btn btn-default btn-xs" ng-click="removeServerConfig(key)">
+						<span class="glyphicon glyphicon-trash"></span> Delete
+					</button>
+				</div>
+			</td>
+			<!-- EDIT -->
+			<td class="config-{{key}}-edit"><input type="text" class="form-control" value="{{key}}"></td>
+			<td class="config-{{key}}-edit"><input type="text" class="form-control" value="{{value}}"></td>
+			<td class="config-{{key}}-edit">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default btn-xs" ng-click="setServerConfig(key)">
+						<span class="glyphicon glyphicon-ok"></span> Save
+					</button>
+					<button type="button" class="btn btn-default btn-xs" ng-click="setEditable(false, key)">
+						<span class="glyphicon glyphicon-remove"></span> Cancel
+					</button>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
+
 <h2>OMS Services</h2>
 
 <table class="table table-stripped">

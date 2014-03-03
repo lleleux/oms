@@ -26,7 +26,7 @@ adminPanelApp.config(['$routeProvider', '$locationProvider', function ($routePro
 }]);
 
 adminPanelApp.factory('devices', ['$resource', function ($resource) {
-	return $resource('http://localhost:8083/device/:id', {id: '@id'}, {
+	return $resource('http://{{hostname}}:{{port}}/device/:id', {id: '@id'}, {
 		update: {method: 'PUT'}
 	});
 }]);
@@ -38,14 +38,14 @@ adminPanelApp.factory('installs', ['$resource', function ($resource) {
 		},
 		accept: {
 			method:		'POST',
-			url:		'http://localhost:8083/install/:id/accept'
+			url:		'http://{{hostname}}:{{port}}/install/:id/accept'
 		},
 		reject: {
 			method:		'POST',
-			url:		'http://localhost:8083/install/:id/reject'
+			url:		'http://{{hostname}}:{{port}}/install/:id/reject'
 		}
 	};
-	return $resource('http://localhost:8083/install/:id', {id: '@id'}, actions);
+	return $resource('http://{{hostname}}:{{port}}/install/:id', {id: '@id'}, actions);
 }]);
 
 /**

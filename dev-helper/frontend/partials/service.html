@@ -34,7 +34,53 @@
 
 <textarea class="form-control" rows="10" disabled>{{console[server.hostname][service.name]}}</textarea>
 
-<hr>
+
+
+<h2>Configuration</h2>
+
+<table class="table table-stripped">
+	<thead>
+		<tr>
+			<th>Key</th>
+			<th>Value</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="(key, value) in service.config">
+			<!-- VIEW -->
+			<td class="config-{{key}}-view">{{key}}</td>
+			<td class="config-{{key}}-view">{{value | limitTo:40}}</td>
+			<td class="config-{{key}}-view">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default btn-xs" ng-click="setEditable(true, key, value)">
+						<span class="glyphicon glyphicon-pencil"></span> Edit
+					</button>
+					<button type="button" class="btn btn-default btn-xs" ng-click="removeServiceConfig(key)">
+						<span class="glyphicon glyphicon-trash"></span> Delete
+					</button>
+				</div>
+			</td>
+			<!-- EDIT -->
+			<td class="config-{{key}}-edit"><input type="text" class="form-control" value="{{key}}"></td>
+			<td class="config-{{key}}-edit"><input type="text" class="form-control" value="{{value}}"></td>
+			<td class="config-{{key}}-edit">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default btn-xs" ng-click="setServiceConfig(key)">
+						<span class="glyphicon glyphicon-ok"></span> Save
+					</button>
+					<button type="button" class="btn btn-default btn-xs" ng-click="setEditable(false, key, value)">
+						<span class="glyphicon glyphicon-remove"></span> Cancel
+					</button>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
+
+<h2>Actions</h2>
 
 <div class="btn-group">
 	<button type="button" class="btn btn-default" ng-click="start(server.hostname, [service.name])">

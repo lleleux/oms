@@ -17,7 +17,7 @@ function HeaderCtrl($scope, $location) {
 function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 
 	$scope.console = {};
-	$scope.config = {};
+//	$scope.config = {};
 
 	// Set servers
 	var setServers = function (data) {
@@ -93,6 +93,47 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 	$scope.deleteService = function (serverId, serviceName) {
 		servers.deleteService({id: serverId, name: serviceName});
 		$('#delete').modal('hide');
+	};
+
+	$scope.setEditable = function (isEditable, configKey, value) {
+		if (isEditable) {
+			// Hide the view and show the edit
+			$('.config-' + configKey + '-view').hide();
+			$('.config-' + configKey + '-edit').show();
+		} else {
+			// Hide the edit and show the view
+			$('.config-' + configKey + '-edit').hide();
+			$('.config-' + configKey + '-view').show();
+			// Set the old value in the inputs
+			$('.config-' + configKey + '-edit input:eq(0)').val(configKey);
+			$('.config-' + configKey + '-edit input:eq(1)').val($scope.server.config[configKey]);
+		}
+	};
+
+	$scope.removeServerConfig = function (key) {
+		servers.removeServerConfig({id: $scope.server._id, key: key});
+	};
+
+	$scope.setServerConfig = function (key) {
+		var value = $('.config-' + key + '-edit input:eq(1)').val();
+		var success = function (data, responseHeaders) {
+			$scope.server.config[key] = value;
+			$scope.setEditable(false, key, value);
+		};
+		servers.setServerConfig({id: $scope.server._id, key: key}, {value: value}, success);
+	};
+
+	$scope.removeServiceConfig = function (key) {
+		servers.removeServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key});
+	};
+
+	$scope.setServiceConfig = function (key) {
+		var value = $('.config-' + key + '-edit input:eq(1)').val();
+		var success = function (data, responseHeaders) {
+			$scope.service.config[key] = value;
+			$scope.setEditable(false, key, value);
+		};
+		servers.setServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success);
 	};
 
 	$scope.$on('$destroy', function (event) {

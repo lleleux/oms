@@ -50,7 +50,7 @@ case "${COMMAND}" in
 	# Check if the script is on the server
 	"check-script")
 		SCRIPT_FILE=$1
-		ssh -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo ls ${SCRIPT_FILE}
+		ssh -q -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo ls ${SCRIPT_FILE}
 		exit $?
 		;;
 
@@ -63,9 +63,9 @@ case "${COMMAND}" in
 		LOCAL_TMP_FILE=`mktemp`
 		REMOTE_TMP_FILE="${LOCAL_TMP_FILE}2"
 		echo "${BASE64}" | base64 -d > ${LOCAL_TMP_FILE}
-		scp -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${LOCAL_TMP_FILE} ${USERNAME}@${HOST}:${REMOTE_TMP_FILE}
+		scp -q -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ${KEY_FILE} ${LOCAL_TMP_FILE} ${USERNAME}@${HOST}:${REMOTE_TMP_FILE}
 		rm -f ${LOCAL_TMP_FILE}
-		ssh -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo chmod +x ${REMOTE_TMP_FILE}; sudo mv ${REMOTE_TMP_FILE} ${SCRIPT_FILE};
+		ssh -q -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo chmod +x ${REMOTE_TMP_FILE}; sudo mv ${REMOTE_TMP_FILE} ${SCRIPT_FILE};
 		;;
 
 	# Execute a command on the host
@@ -76,10 +76,10 @@ case "${COMMAND}" in
 		LOCAL_TMP_FILE=`mktemp`
 		REMOTE_TMP_FILE="${LOCAL_TMP_FILE}2"
 		echo "${BASE64}" | base64 -d > ${LOCAL_TMP_FILE}
-		scp -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${LOCAL_TMP_FILE} ${USERNAME}@${HOST}:${REMOTE_TMP_FILE}
+		scp -q -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ${KEY_FILE} ${LOCAL_TMP_FILE} ${USERNAME}@${HOST}:${REMOTE_TMP_FILE}
 		rm -f ${LOCAL_TMP_FILE}
 		# Execute
-		ssh -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo chmod +x ${REMOTE_TMP_FILE}; sudo bash ${REMOTE_TMP_FILE}; sudo rm -f ${REMOTE_TMP_FILE}
+		ssh -q -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo chmod +x ${REMOTE_TMP_FILE}; sudo bash ${REMOTE_TMP_FILE}; sudo rm -f ${REMOTE_TMP_FILE}
 		;;
 
 	# Execute a script on the host
@@ -90,10 +90,10 @@ case "${COMMAND}" in
 		LOCAL_TMP_FILE=`mktemp`
 		REMOTE_TMP_FILE="${LOCAL_TMP_FILE}2"
 		echo "${SCRIPT_AND_ARGUMENTS}" > ${LOCAL_TMP_FILE}
-		scp -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${LOCAL_TMP_FILE} ${USERNAME}@${HOST}:${REMOTE_TMP_FILE}
+		scp -q -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ${KEY_FILE} ${LOCAL_TMP_FILE} ${USERNAME}@${HOST}:${REMOTE_TMP_FILE}
 		rm -f ${LOCAL_TMP_FILE}
 		# Execute
-		ssh -q -oStrictHostKeyChecking=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo chmod +x ${REMOTE_TMP_FILE}; sudo bash ${REMOTE_TMP_FILE}; sudo rm -f ${REMOTE_TMP_FILE}
+		ssh -q -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ${KEY_FILE} ${USERNAME}@${HOST} sudo chmod +x ${REMOTE_TMP_FILE}; sudo bash ${REMOTE_TMP_FILE}; sudo rm -f ${REMOTE_TMP_FILE}
 		;;
 
 	# Default when the command is not recognized

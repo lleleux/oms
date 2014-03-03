@@ -102,9 +102,29 @@ devHelperApp.factory('docApi', ['$resource', function ($resource) {
 devHelperApp.factory('servers', ['$resource', function ($resource) {
 	var actions = {
 		deleteService: {
-			method:'DELETE',
-			url: '/api/server/:id/service/:name',
-			params: {id: '@id', name: '@name'}
+			method:	'DELETE',
+			url: 	'/api/server/:id/service/:name',
+			params:	{id: '@id', name: '@name'}
+		},
+		setServerConfig: {
+			method:	'POST',
+			url:	'/api/server/:id/config/:key',
+			params:	{id: '@id', key: '@key'}
+		},
+		removeServerConfig: {
+			method:	'DELETE',
+			url:	'/api/server/:id/config/:key',
+			params:	{id: '@id', key: '@key'}
+		},
+		setServiceConfig: {
+			method:	'POST',
+			url:	'/api/server/:id/service/:name/config/:key',
+			params:	{id: '@id', name: '@name', key: '@key'}
+		},
+		removeServiceConfig: {
+			method:	'DELETE',
+			url:	'/api/server/:id/service/:name/config/:key',
+			params:	{id: '@id', name: '@name', key: '@key'}
 		}
 	};
 	return $resource('/api/server/:id', {id: '@id'}, actions);

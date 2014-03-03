@@ -28,8 +28,8 @@ cp -r ${SOURCES_DIR}installers/debian/* ${INSTALLERS_DIR}
 # Copy sources in package
 mkdir -p ${INSTALLERS_DIR}data/opt/${NAME}/
 cp -r ${SOURCES_DIR}${SHORTNAME}/* ${INSTALLERS_DIR}data/opt/${NAME}/
-# Copy modules in package
-cp -r ${SOURCES_DIR}node_modules/* ${INSTALLERS_DIR}data/opt/${NAME}/node_modules/
+# Copy modules in package without overwriting existing modules
+cp -rn ${SOURCES_DIR}node_modules/* ${INSTALLERS_DIR}data/opt/${NAME}/node_modules/
 
 # Delete unused scripts
 for script in `ls ${INSTALLERS_DIR}control/ | egrep -v ${TYPE}_*`; do
