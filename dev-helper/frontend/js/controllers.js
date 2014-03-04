@@ -104,18 +104,24 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 			// Hide the edit and show the view
 			$('.config-' + configKey + '-edit').hide();
 			$('.config-' + configKey + '-view').show();
-			// Set the old value in the inputs
-			$('.config-' + configKey + '-edit input:eq(0)').val(configKey);
-			$('.config-' + configKey + '-edit input:eq(1)').val($scope.server.config[configKey]);
+			// Set the old value in the input
+			$('.config-' + configKey + '-edit input:eq(0)').val($scope.server.config[configKey]);
 		}
 	};
 
-	$scope.removeServerConfig = function (key) {
-		servers.removeServerConfig({id: $scope.server._id, key: key});
+	$scope.addServerConfig = function () {
+		var key = $('.config-add input:eq(0)').val();
+		var value = $('.config-add input:eq(1)').val();
+		var success = function (data, responseHeaders) {
+			$scope.server.config[key] = value;
+			$scope.setEditable(false, key, value);
+			$('.config-add input').val('');
+		};
+		servers.addServerConfig({id: $scope.server._id, key: key}, {value: value}, success);
 	};
 
 	$scope.setServerConfig = function (key) {
-		var value = $('.config-' + key + '-edit input:eq(1)').val();
+		var value = $('.config-' + key + '-edit input:eq(0)').val();
 		var success = function (data, responseHeaders) {
 			$scope.server.config[key] = value;
 			$scope.setEditable(false, key, value);
@@ -123,17 +129,31 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 		servers.setServerConfig({id: $scope.server._id, key: key}, {value: value}, success);
 	};
 
-	$scope.removeServiceConfig = function (key) {
-		servers.removeServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key});
+	$scope.removeServerConfig = function (key) {
+		servers.removeServerConfig({id: $scope.server._id, key: key});
+	};
+
+	$scope.addServiceConfig = function () {
+		var key = $('.config-add input:eq(0)').val();
+		var value = $('.config-add input:eq(1)').val();
+		var success = function (data, responseHeaders) {
+			$scope.server.config[key] = value;
+			$scope.setEditable(false, key, value);
+		};
+		servers.addServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success);
 	};
 
 	$scope.setServiceConfig = function (key) {
-		var value = $('.config-' + key + '-edit input:eq(1)').val();
+		var value = $('.config-' + key + '-edit input:eq(0)').val();
 		var success = function (data, responseHeaders) {
 			$scope.service.config[key] = value;
 			$scope.setEditable(false, key, value);
 		};
 		servers.setServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success);
+	};
+
+	$scope.removeServiceConfig = function (key) {
+		servers.removeServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key});
 	};
 
 	$scope.$on('$destroy', function (event) {

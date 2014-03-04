@@ -93,25 +93,25 @@ var removeService = function (request, response) {
 };
 
 /**
- * Get the config value for the given key on the given server.
+ * Get the server config value for the given key on the given server.
  *
- * @method getConfig
- * @name Get the config value for the given key
+ * @method getServerConfig
+ * @name Get the server config value for the given key
  * @param id {String} required The id of the server
- * @param key {String} required The key of config to get
+ * @param key {String} required The key of the config to get
  */
-var getConfig = function (request, response) {
+var getServerConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (server) {
 		if (server) {
-			if (server.config[request.params.key]) {
+			if (server.config[request.params.key] != undefined) {
 				response.send(server.config[request.params.key]);
 			} else {
-				response.send("Unable to find config with key " + request.params.key);
+				response.send(404, {error: 'Unable to find server config with key ' + request.params.key});
 			}
 		}
 		// If no server found...
 		else {
-			response.send("Unable to find server with id " + request.params.id);
+			response.send(404, {error: 'Unable to find server with id ' + request.params.id});
 		}
 	});
 };
@@ -130,22 +130,21 @@ var getConfig = function (request, response) {
 var setServerConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (server) {
 		if (server) {
-			if (server.config[request.params.key]) {
+			if (server.config[request.params.key] != undefined) {
 				var data = {};
 				data['config.' + request.params.key] = request.body.value;
 				serversDao.update(server._id, data, function (result) {
-					response.send(result);
+					response.send(200);
 				});
 			} else {
-				response.send("Unable to find config with key " + request.params.key);
+				response.send(404, {error: 'Unable to find server config with key ' + request.params.key});
 			}
 		}
 		// If no server found...
 		else {
-			response.send("Unable to find server with id " + request.params.id);
+			response.send(404, {error: 'Unable to find server with id ' + request.params.id});
 		}
 	});
-	response.send(200);
 };
 
 /**
@@ -161,7 +160,7 @@ var setServerConfig = function (request, response) {
 var removeServerConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (server) {
 		if (server) {
-			if (server.config[request.params.key]) {
+			if (server.config[request.params.key] != undefined) {
 				var item = {};
 				item['config.' + request.params.key] = 1;
 				var id = new db.BSON.ObjectID(request.params.id);
@@ -169,12 +168,12 @@ var removeServerConfig = function (request, response) {
 					response.send(result);
 				});
 			} else {
-				response.send("Unable to find config with key " + request.params.key);
+				response.send(404, {error: 'Unable to find server config with key ' + request.params.key});
 			}
 		}
 		// If no server found...
 		else {
-			response.send("Unable to find server with id " + request.params.id);
+			response.send(404, {error: 'Unable to find server with id ' + request.params.id});
 		}
 	});
 };
@@ -185,34 +184,58 @@ var removeServerConfig = function (request, response) {
  * The update will be taken into consideration at the next
  * restart of the services running on the server..
  *
- * @method addConfig
+ * @method addServerConfig
  * @name Add the config value for the given key
  * @param id {String} required The id of the server
  * @param key {String} required The key of config to add
  * TODO value param
  */
-var addConfig = function (request, response) {
+var addServerConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (server) {
 		if (server) {
-			if (!server.config[request.params.key]) {
+			if (!server.config[request.params.key] != undefined) {
 				var data = {};
 				data['config.' + request.params.key] = request.body.value;
 				serversDao.update(server._id, data, function (result) {
-					response.send(result);
+					response.send(200);
 				});
 			} else {
-				response.send("A config already exists with key " + request.params.key);
+				response.send(409, {error: 'A server config already exists with key ' + request.params.key});
 			}
 		}
 		// If no server found...
 		else {
-			response.send("Unable to find server with id " + request.params.id);
+			response.send(404, {error: 'Unable to find server with id ' + request.params.id});
 		}
 	});
 };
 
 /**
- * Set the config value for the given key for the given service
+ * Get the service config value for the given key on the given server.
+ *
+ * @method getServiceConfig
+ * @name Get the service config value for the given key
+ * @param id {String} required The id of the server
+ * @param key {String} required The key of config to get
+ */
+var getServiceConfig = function (request, response) {
+	serversDao.findById(request.params.id, function (server) {
+		if (server) {
+			if (server.config[request.params.key] != undefined) {
+				response.send(server.config[request.params.key]);
+			} else {
+				response.send(404, {error: 'Unable to find service config with key ' + request.params.key});
+			}
+		}
+		// If no server found...
+		else {
+			response.send(404, {error: 'Unable to find server with id ' + request.params.id});
+		}
+	});
+};
+
+/**
+ * Set the service config value for the given key for the given service
  * on the given server.
  * The update will be taken into consideration at the next
  * restart of the service running on the server..
@@ -226,22 +249,21 @@ var addConfig = function (request, response) {
 var setServiceConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (server) {
 		if (server) {
-			if (server.services[request.params.name].config[request.params.key]) {
+			if (server.services[request.params.name].config[request.params.key] != undefined) {
 				var data = {};
 				data['services.' + request.params.name + '.config.' + request.params.key] = request.body.value;
 				serversDao.update(server._id, data, function (result) {
-					response.send(result);
+					response.send(200);
 				});
 			} else {
-				response.send("Unable to find config with key " + request.params.key);
+				response.send(404, {error: 'Unable to find service config with key ' + request.params.key});
 			}
 		}
 		// If no server found...
 		else {
-			response.send("Unable to find server with id " + request.params.id);
+			response.send(404, {error: 'Unable to find server with id ' + request.params.id});
 		}
 	});
-	response.send(200);
 };
 
 /**
@@ -257,7 +279,7 @@ var setServiceConfig = function (request, response) {
 var removeServiceConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (server) {
 		if (server) {
-			if (server.services[request.params.name].config[request.params.key]) {
+			if (server.services[request.params.name].config[request.params.key] != undefined) {
 				var item = {};
 				item['services.' + request.params.name + '.config.' + request.params.key] = 1;
 				var id = new db.BSON.ObjectID(request.params.id);
@@ -265,12 +287,44 @@ var removeServiceConfig = function (request, response) {
 					response.send(result);
 				});
 			} else {
-				response.send("Unable to find config with key " + request.params.key);
+				response.send(404, {error: 'Unable to find service config with key ' + request.params.key});
 			}
 		}
 		// If no server found...
 		else {
-			response.send("Unable to find server with id " + request.params.id);
+			response.send(404, {error: 'Unable to find server with id ' + request.params.id});
+		}
+	});
+};
+
+/**
+ * Add a config value with the given key on the given server.
+ * If a config already exists with the given key, send an error.
+ * The update will be taken into consideration at the next
+ * restart of the services running on the server..
+ *
+ * @method addServiceConfig
+ * @name Add the config value for the given key
+ * @param id {String} required The id of the server
+ * @param key {String} required The key of config to add
+ * TODO value param
+ */
+var addServiceConfig = function (request, response) {
+	serversDao.findById(request.params.id, function (server) {
+		if (server) {
+			if (!server.config[request.params.key] != undefined) {
+				var data = {};
+				data['services.' + request.params.name + '.config.' + request.params.key] = request.body.value;
+				serversDao.update(server._id, data, function (result) {
+					response.send(200);
+				});
+			} else {
+				response.send(409, {error: 'A service config already exists with key ' + request.params.key});
+			}
+		}
+		// If no server found...
+		else {
+			response.send(404, {error: 'Unable to find server with id ' + request.params.id});
 		}
 	});
 };
@@ -285,9 +339,13 @@ var removeServiceConfig = function (request, response) {
 exports.findAll = findAll;
 exports.remove = remove;
 exports.removeService = removeService;
-exports.getConfig = getConfig;
+
+exports.getServerConfig = getServerConfig;
 exports.setServerConfig = setServerConfig;
 exports.removeServerConfig = removeServerConfig;
-exports.addConfig = addConfig;
+exports.addServerConfig = addServerConfig;
+
+exports.getServiceConfig = getServiceConfig;
 exports.setServiceConfig = setServiceConfig;
 exports.removeServiceConfig = removeServiceConfig;
+exports.addServiceConfig = addServiceConfig;

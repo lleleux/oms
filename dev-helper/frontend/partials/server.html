@@ -98,7 +98,7 @@
 				</div>
 			</td>
 			<!-- EDIT -->
-			<td class="config-{{key}}-edit"><input type="text" class="form-control" value="{{key}}"></td>
+			<td class="config-{{key}}-edit">{{key}}</td>
 			<td class="config-{{key}}-edit"><input type="text" class="form-control" value="{{value}}"></td>
 			<td class="config-{{key}}-edit">
 				<div class="btn-group">
@@ -107,6 +107,18 @@
 					</button>
 					<button type="button" class="btn btn-default btn-xs" ng-click="setEditable(false, key)">
 						<span class="glyphicon glyphicon-remove"></span> Cancel
+					</button>
+				</div>
+			</td>
+		</tr>
+		<!-- ADD -->
+		<tr>
+			<td class="config-add"><input type="text" class="form-control"></td>
+			<td class="config-add"><input type="text" class="form-control"></td>
+			<td class="config-add">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default btn-xs" ng-click="addServerConfig()">
+						<span class="glyphicon glyphicon-ok"></span> Add
 					</button>
 				</div>
 			</td>

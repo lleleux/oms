@@ -106,6 +106,11 @@ devHelperApp.factory('servers', ['$resource', function ($resource) {
 			url: 	'/api/server/:id/service/:name',
 			params:	{id: '@id', name: '@name'}
 		},
+		addServerConfig: {
+			method:	'PUT',
+			url:	'/api/server/:id/config/:key',
+			params:	{id: '@id', key: '@key'}
+		},
 		setServerConfig: {
 			method:	'POST',
 			url:	'/api/server/:id/config/:key',
@@ -115,6 +120,11 @@ devHelperApp.factory('servers', ['$resource', function ($resource) {
 			method:	'DELETE',
 			url:	'/api/server/:id/config/:key',
 			params:	{id: '@id', key: '@key'}
+		},
+		addServiceConfig: {
+			method:	'PUT',
+			url:	'/api/server/:id/service/:name/config/:key',
+			params:	{id: '@id', name: '@name', key: '@key'}
 		},
 		setServiceConfig: {
 			method:	'POST',
