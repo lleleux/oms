@@ -102,3 +102,21 @@ code {
 td[class^="config-"][class$="-edit"] {
 	display: none;
 }
+
+a.list-group-title {
+	font-weight: bold;
+	text-align: center;
+	text-decoration: underline;
+}
+
+a.list-group-title:hover {
+	cursor: auto;
+	background-color: transparent;
+	text-decoration: underline;
+}
+
+a.list-group-title:focus {
+	cursor: auto;
+	background-color: transparent;
+	text-decoration: underline;
+}

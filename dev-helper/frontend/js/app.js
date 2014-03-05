@@ -95,8 +95,24 @@ devHelperApp.factory('socket', function ($rootScope) {
 
 });
 
-devHelperApp.factory('docApi', ['$resource', function ($resource) {
-	return $resource('/api/doc/api/', {}, {reload: {method: 'POST', url: '/api/doc/api/reload'}});
+devHelperApp.factory('doc', ['$resource', function ($resource) {
+	var actions = {
+		reload: {
+			method:	'POST',
+			url: 	'/api/doc/reload'
+		},
+		getApi: {
+			method:	'GET',
+			isArray: true,
+			url: 	'/api/doc/api'
+		},
+		getDevHelper: {
+			method:	'GET',
+			isArray: true,
+			url: 	'/api/doc/dev-helper'
+		}
+	};
+	return $resource('/api/doc/api/', {}, actions);
 }]);
 
 devHelperApp.factory('servers', ['$resource', function ($resource) {

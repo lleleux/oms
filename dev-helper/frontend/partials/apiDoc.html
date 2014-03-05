@@ -8,22 +8,31 @@
 
 <div class="col-sm-3 nav bs-sidenav" id="sidebar" role="navigation">
 	<div class="list-group">
-		<a href="#" class="list-group-item" ng-class="{active: $parent.selected==$index}" ng-repeat="api in apis" ng-click="$parent.selected=$index">{{api.name}}</a>
+		<a href="#" class="list-group-item list-group-title">API</a>
+		<a href="#" class="list-group-item" ng-class="{active: $parent.selectedResource==$index && $parent.selectedApi==api}" ng-repeat="resource in api" ng-click="$parent.selectedApi=api;$parent.selectedResource=$index;$parent.selectedApiName='api'">{{resource.name}}</a>
+	</div>
+	<div class="list-group">
+		<a href="#" class="list-group-item list-group-title">Dev-Helper</a>
+		<a href="#" class="list-group-item" ng-class="{active: $parent.selectedResource==$index && $parent.selectedApi==devHelper}" ng-repeat="resource in devHelper" ng-click="$parent.selectedApi=devHelper;$parent.selectedResource=$index;$parent.selectedApiName='dev-helper'">{{resource.name}}</a>
 	</div>
 </div>
 
 <div class="panel-group col-sm-9" id="accordion">
 
-<div ng-if="selected !== undefined">
-	<h3>{{apis[selected].name}}</h3>
-	<p>{{apis[selected].description}}</p>
-</div>
-<div ng-if="selected === undefined">
-	<h3>OMS API</h3>
-	<p>Welcome in the OMS API documentation tool</p>
-</div>
+	<div ng-if="selectedApi === api">
+		<h3>{{selectedApi[selectedResource].name}}</h3>
+		<p>{{selectedApi[selectedResource].description}}</p>
+	</div>
+	<div ng-if="selectedApi === devHelper">
+		<h3>{{selectedApi[selectedResource].name}}</h3>
+		<p>{{selectedApi[selectedResource].description}}</p>
+	</div>
+	<div ng-if="selectedApi === undefined">
+		<h3>OMS API</h3>
+		<p>Welcome in the OMS API documentation tool</p>
+	</div>
 
-	<div class="panel panel-default" ng-repeat="route in apis[selected].routes">
+	<div class="panel panel-default" ng-repeat="route in selectedApi[selectedResource].routes">
 		<div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{$index}}">
 			<h4 class="panel-title">
 				<span class="label label-method {{getClassForMethod(route.method)}}">{{route.method | uppercase}}</span>
@@ -33,7 +42,7 @@
 		</div>
 		<div id="collapse{{$index}}" class="panel-collapse collapse">
 			<div class="panel-body">
-				<button type="button" class="btn btn-default pull-right" ng-click="execute(route, $index)" data-toggle="tab" data-target="#headers-{{$index}}">
+				<button type="button" class="btn btn-default pull-right" ng-click="execute($parent.selectedApiName, route, $index)" data-toggle="tab" data-target="#headers-{{$index}}">
 					<span class="glyphicon glyphicon-play"></span> Execute
 				</button>
 				<h4>Description</h4>

@@ -17,7 +17,6 @@ function HeaderCtrl($scope, $location) {
 function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 
 	$scope.console = {};
-//	$scope.config = {};
 
 	// Set servers
 	var setServers = function (data) {
@@ -168,12 +167,22 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
  * API Doc Controller
  */
 
-function ApiDocCtrl($scope, docApi, $http) {
+function ApiDocCtrl($scope, doc, $http) {
 
 	// Get API documentation
-	$scope.apis = docApi.query(
+	$scope.api = doc.getApi(
 		function (value, responseHeaders) {
-			$scope.apis = value;
+			$scope.api = value;
+		},
+		function (httpResponse) {
+			$scope.alert = {type: "danger", message: "Unable to retrieve documentation"};
+		}
+	);
+
+	// Get API documentation
+	$scope.devHelper = doc.getDevHelper(
+		function (value, responseHeaders) {
+			$scope.devHelper = value;
 		},
 		function (httpResponse) {
 			$scope.alert = {type: "danger", message: "Unable to retrieve documentation"};
@@ -197,7 +206,7 @@ function ApiDocCtrl($scope, docApi, $http) {
 
 	// Reload the API documentation from sources
 	$scope.reload = function () {
-		$scope.apis = docApi.reload(
+		doc.reload(
 			function (value, responseHeaders) {
 				$scope.alert = {type: "success", message: "Request sent"};
 			},
@@ -207,7 +216,7 @@ function ApiDocCtrl($scope, docApi, $http) {
 		);
 	};
 
-	$scope.execute = function (route, routeNumber) {
+	$scope.execute = function (apiName, route, routeNumber) {
 		var url = route.url;
 		var error = false;
 		route.params.forEach(function (param) {
@@ -224,7 +233,11 @@ function ApiDocCtrl($scope, docApi, $http) {
 		if (error) {
 			return;
 		}
-		$http[route.method]('http://localhost:8083' + url)
+		var servers = {
+			'api':			'http://localhost:8083',
+			'dev-helper':	'http://localhost:8082'
+		};
+		$http[route.method](servers[apiName] + url)
 			.success(function (data, status, headers, config) {
 				route.data = data;
 				route.status = status;
