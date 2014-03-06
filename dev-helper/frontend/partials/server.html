@@ -146,7 +146,7 @@
 			<td><span class="label" ng-class="{'label-success': service.status=='running', 'label-warning': service.status=='stopped'}">{{service.status | uppercase}}</span></td>
 			<td>{{service.pid}}</td>
 			<td>
-				<a href="{{service.link}}" target="_blank" ng-if="service.pid" class="btn btn-default btn-xs" role="button">
+				<a href="{{getLink(server, service.name)}}" target="_blank" ng-if="service.pid && getLink(server, service.name)" class="btn btn-default btn-xs" role="button">
 					<span class="glyphicon glyphicon-new-window"></span> Link
 				</a>
 			</td>

@@ -22,6 +22,7 @@ var db = require('db');
 
 // DAO
 var serversDao = new db.Dao('servers');
+var configDao = new db.Dao('config');
 
 
 
@@ -32,8 +33,36 @@ var serversDao = new db.Dao('servers');
  * @name 	Get all the servers
  */
 var findAll = function (request, response) {
-	serversDao.findAll(function (items) {
-		response.send(items);
+	serversDao.findAll(function (servers) {
+		configDao.findAll(function (config) {
+			var getConfig = function (service) {
+				for (var configKey in config) {
+					if (config[configKey].name == service) {
+						delete(config[configKey]._id);
+						delete(config[configKey].name);
+						return config[configKey];
+					}
+				}
+			};
+			// For each server
+			for (var serverKey in servers) {
+				// For each service of the server
+				for (var serviceKey in servers[serverKey].services) {
+					// Create empty config object if not exists
+					if (!servers[serverKey].services[serviceKey].config) {
+						servers[serverKey].services[serviceKey].config = {};
+					}
+					// Copy config if the key not exists, because default values are less important
+					var defaultConfig = getConfig(serviceKey);
+					for (var configKey in defaultConfig) {
+						if (!servers[serverKey].services[serviceKey].config[configKey]) {
+							servers[serverKey].services[serviceKey].config[configKey] = defaultConfig[configKey];
+						}
+					}
+				}
+			}
+			response.send(servers);
+		});
 	});
 };
 
@@ -119,7 +148,8 @@ var getServerConfig = function (request, response) {
 /**
  * Set the config value for the given key on the given server.
  * The update will be taken into consideration at the next
- * restart of the services running on the server..
+ * restart of the services running on the server...
+ * If the key is not present, add it.
  *
  * @method setServerConfig
  * @name Set the config value for the given key
@@ -130,15 +160,11 @@ var getServerConfig = function (request, response) {
 var setServerConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (server) {
 		if (server) {
-			if (server.config[request.params.key] != undefined) {
-				var data = {};
-				data['config.' + request.params.key] = request.body.value;
-				serversDao.update(server._id, data, function (result) {
-					response.send(200);
-				});
-			} else {
-				response.send(404, {error: 'Unable to find server config with key ' + request.params.key});
-			}
+			var data = {};
+			data['config.' + request.params.key] = request.body.value;
+			serversDao.update(server._id, data, function (result) {
+				response.send(200);
+			});
 		}
 		// If no server found...
 		else {
@@ -238,7 +264,8 @@ var getServiceConfig = function (request, response) {
  * Set the service config value for the given key for the given service
  * on the given server.
  * The update will be taken into consideration at the next
- * restart of the service running on the server..
+ * restart of the service running on the server...
+ * If the key is not present, add it.
  *
  * @method setServiceConfig
  * @name Set the config value for the given key
@@ -249,15 +276,11 @@ var getServiceConfig = function (request, response) {
 var setServiceConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (server) {
 		if (server) {
-			if (server.services[request.params.name].config[request.params.key] != undefined) {
-				var data = {};
-				data['services.' + request.params.name + '.config.' + request.params.key] = request.body.value;
-				serversDao.update(server._id, data, function (result) {
-					response.send(200);
-				});
-			} else {
-				response.send(404, {error: 'Unable to find service config with key ' + request.params.key});
-			}
+			var data = {};
+			data['services.' + request.params.name + '.config.' + request.params.key] = request.body.value;
+			serversDao.update(server._id, data, function (result) {
+				response.send(200);
+			});
 		}
 		// If no server found...
 		else {

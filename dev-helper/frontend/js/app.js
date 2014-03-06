@@ -54,9 +54,10 @@ devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProv
 
 
 /**
- * Define a service "socket" with two services:
+ * Define a service "socket" with three methods:
  *      - on(eventName, callback)
  *      - emit(eventName, data, callback)
+ *		- removeAllListeners()
  */
 
 devHelperApp.factory('socket', function ($rootScope) {

@@ -42,9 +42,24 @@
 		</div>
 		<div id="collapse{{$index}}" class="panel-collapse collapse">
 			<div class="panel-body">
-				<button type="button" class="btn btn-default pull-right" ng-click="execute($parent.selectedApiName, route, $index)" data-toggle="tab" data-target="#headers-{{$index}}">
-					<span class="glyphicon glyphicon-play"></span> Execute
-				</button>
+				<div class="btn-group pull-right">
+					<button type="button" class="btn btn-default" ng-click="execute(null, $parent.selectedApiName, route, $index)">
+						<span class="glyphicon glyphicon-play"></span> Execute
+					</button>
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<span class="caret"></span>
+						<span class="sr-only">Toggle Dropdown</span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li ng-repeat="server in $parent.servers[$parent.selectedApiName]">
+							<a href="#" ng-click="execute(server.url, $parent.$parent.selectedApiName, $parent.route, $parent.$index)">
+								{{server.hostname}}
+								<span class="label" ng-class="{'label-success': server.status=='running', 'label-warning': server.status=='stopped'}">{{server.status | uppercase}}</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+
 				<h4>Description</h4>
 				<p>{{route.description}}</p>
 				<hr>

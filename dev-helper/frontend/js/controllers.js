@@ -76,12 +76,11 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 		socket.emit('restartServices', {hostname: hostname, services: services});
 	};
 
-	$scope.getLink = function (service) {	// TODO find elegant solution...
-		var links = {
-			'oms-dev-helper':	'http://localhost:8082',
-			'oms-admin-panel':	'http://localhost:8081'
-		};
-		return links[service];
+	$scope.getLink = function (server, serviceName) {
+		if (serviceName == 'oms-dev-helper' || serviceName == 'oms-admin-panel') {
+			var host = server.config.maintenanceHost ? server.config.maintenanceHost : server.hostname;
+			return 'http://' + host + ':' + server.services[serviceName].config.port;
+		}
 	};
 
 	$scope.deleteServer = function (serverId) {
@@ -167,7 +166,7 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
  * API Doc Controller
  */
 
-function ApiDocCtrl($scope, doc, $http) {
+function ApiDocCtrl($scope, doc, servers, $http) {
 
 	// Get API documentation
 	$scope.api = doc.getApi(
@@ -186,6 +185,38 @@ function ApiDocCtrl($scope, doc, $http) {
 		},
 		function (httpResponse) {
 			$scope.alert = {type: "danger", message: "Unable to retrieve documentation"};
+		}
+	);
+
+	// Get servers list
+	$scope.servers = servers.query(
+		function (value, responseHeaders) {
+			$scope.servers = {
+				'api':			[],
+				'dev-helper':	[]
+			};
+			value.forEach(function (server) {
+				var host = server.config.maintenanceHost ? server.config.maintenanceHost : server.hostname;
+				if (server.services['oms-api']) {
+					$scope.servers.api.push({
+						_id:		server._id,
+						hostname:	server.hostname,
+						status:		server.services['oms-api'].status,
+						url:		'http://' + host + ':' + server.services['oms-api'].config.port
+					});
+				}
+				if (server.services['oms-dev-helper']) {
+					$scope.servers['dev-helper'].push({
+						_id:		server._id,
+						hostname:	server.hostname,
+						status:		server.services['oms-dev-helper'].status,
+						url:		'http://' + host + ':' + server.services['oms-dev-helper'].config.port
+					});
+				}
+			});
+		},
+		function (httpResponse) {
+			$scope.alert = {type: "danger", message: "Unable to retrieve servers list"};
 		}
 	);
 
@@ -216,7 +247,18 @@ function ApiDocCtrl($scope, doc, $http) {
 		);
 	};
 
-	$scope.execute = function (apiName, route, routeNumber) {
+	$scope.execute = function (serverUrl, apiName, route, routeNumber) {
+		if (serverUrl == null) {
+			for (var key in $scope.servers[apiName]) {
+				if ($scope.servers[apiName][key].status == 'running') {
+					serverUrl = $scope.servers[apiName][key].url;
+				}
+			};
+		}
+		if (serverUrl == null) {
+			$scope.alert = {type: "danger", message: "No API running"};
+			return;
+		}
 		var url = route.url;
 		var error = false;
 		route.params.forEach(function (param) {
@@ -233,11 +275,7 @@ function ApiDocCtrl($scope, doc, $http) {
 		if (error) {
 			return;
 		}
-		var servers = {
-			'api':			'http://localhost:8083',
-			'dev-helper':	'http://localhost:8082'
-		};
-		$http[route.method](servers[apiName] + url)
+		$http[route.method](serverUrl + url)
 			.success(function (data, status, headers, config) {
 				route.data = data;
 				route.status = status;
