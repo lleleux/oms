@@ -49,17 +49,59 @@ adminPanelApp.factory('installs', ['$resource', function ($resource) {
 }]);
 
 /**
+ * Toast notifications service
+ * This service loads some configuration like, the show duration,
+ * timeout... All the toastr methods are available:
+ *		- success()
+ *		- info()
+ *		- warning()
+ *		- error()
+ */
+adminPanelApp.factory('toastr', function() {
+	toastr.options = {
+		"closeButton": false,
+		"debug": false,
+		"positionClass": "toast-top-right",
+		"onclick": null,
+		"showDuration": "10000",
+		"hideDuration": "1000",
+		"timeOut": "5000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	return toastr;
+});
+
+/**
  * Define a service "socket" with two services:
  *      - on(eventName, callback)
  *      - emit(eventName, data, callback)
  */
+adminPanelApp.factory('socket', ['toastr', function ($rootScope) {
 
-adminPanelApp.factory('socket', function ($rootScope) {
+	// Connect to the server
+	var socket = io.connect('http://{{hostname}}', {
+		'reconnection delay':			500,		// 0,5s
+		'reconnection limit':			10000,		// 10s (but in reality, 16s... Socket.io multiply always by two and look to be not over the limit: 1,2,4,8,16,32...)
+		'max reconnection attempts':	Infinity,
+	});
 
-	var socket = io.connect();
+	// Listen on connection/disconnection/reconnection events
+	socket.on('connect', function() {
+		toastr.success('Connected in real-time with server');
+	});
+	socket.on('disconnect', function() {
+		toastr.error('Real-time connection with server loosed...');
+	});
+	socket.on('reconnecting', function() {
+		toastr.info('Try to establish again a Real-time connection with server...');
+	});
 
+	// Return an object with some methods
 	return {
-
 		on: function(eventName, callback) {
 			socket.on(eventName, function() {
 				var args = arguments;
@@ -70,7 +112,6 @@ adminPanelApp.factory('socket', function ($rootScope) {
 				});
 			});
 		},
-
 		emit: function (eventName, data, callback) {
 			socket.emit(eventName, data, function () {
 				var args = arguments;
@@ -81,11 +122,9 @@ adminPanelApp.factory('socket', function ($rootScope) {
 				});
 			});
 		},
-
 		removeAllListeners: function () {
-			socket.removeAllListeners();
+			//socket.removeAllListeners();
 		}
-
 	};
 
-});
+}]);

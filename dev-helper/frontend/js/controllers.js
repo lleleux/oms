@@ -11,10 +11,18 @@ function HeaderCtrl($scope, $location) {
 
 
 /**
- * Main Controller
+ * Services Controlles
+ *
+ * Add some properties in the scope :
+ *		- servers 		All the servers information
+ *		- server 		The currently viewing server (selected from url param)
+ *		- service 		The currently viewing service (selected from url param)
+ *		- console 		The console of the currently viewing server
+ *
+ * There are also some methods for starting, stopping services...
  */
 
-function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
+function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) {
 
 	$scope.console = {};
 
@@ -49,10 +57,7 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 			setServers(value);
 		},
 		function (httpResponse) {
-			$scope.alert = {
-				type: "danger",
-				message: "Unable to retrieve devices list"
-			};
+			toastr.error('Unable to retrieve servers list');
 		}
 	);
 
@@ -66,14 +71,17 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 
 	$scope.start = function (hostname, services) {
 		socket.emit('startServices', {hostname: hostname, services: services});
+		toastr.info('Service starting on ' + hostname);
 	};
 
 	$scope.stop = function (hostname, services) {
 		socket.emit('stopServices', {hostname: hostname, services: services});
+		toastr.info('Service shutting down on ' + hostname);
 	};
 
 	$scope.restart = function (hostname, services) {
 		socket.emit('restartServices', {hostname: hostname, services: services});
+		toastr.info('Service restarting on ' + hostname);
 	};
 
 	$scope.getLink = function (server, serviceName) {
@@ -115,7 +123,10 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 			$scope.setEditable(false, key, value);
 			$('.config-add input').val('');
 		};
-		servers.addServerConfig({id: $scope.server._id, key: key}, {value: value}, success);
+		var error = function (httpResponse) {
+			toastr.error('Unable to add server configuration');
+		};
+		servers.addServerConfig({id: $scope.server._id, key: key}, {value: value}, success, error);
 	};
 
 	$scope.setServerConfig = function (key) {
@@ -124,11 +135,20 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 			$scope.server.config[key] = value;
 			$scope.setEditable(false, key, value);
 		};
-		servers.setServerConfig({id: $scope.server._id, key: key}, {value: value}, success);
+		var error = function (httpResponse) {
+			toastr.error('Unable to set server configuration');
+		};
+		servers.setServerConfig({id: $scope.server._id, key: key}, {value: value}, success, error);
 	};
 
 	$scope.removeServerConfig = function (key) {
-		servers.removeServerConfig({id: $scope.server._id, key: key});
+		var success = function (data, responseHeaders) {
+			delete($scope.server.config[key]);
+		};
+		var error = function (httpResponse) {
+			toastr.error('Unable to remove server configuration');
+		};
+		servers.removeServerConfig({id: $scope.server._id, key: key}, null, success, error);
 	};
 
 	$scope.addServiceConfig = function () {
@@ -138,7 +158,10 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 			$scope.server.config[key] = value;
 			$scope.setEditable(false, key, value);
 		};
-		servers.addServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success);
+		var error = function (httpResponse) {
+			toastr.error('Unable to add service configuration');
+		};
+		servers.addServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success, error);
 	};
 
 	$scope.setServiceConfig = function (key) {
@@ -147,11 +170,20 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 			$scope.service.config[key] = value;
 			$scope.setEditable(false, key, value);
 		};
-		servers.setServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success);
+		var error = function (httpResponse) {
+			toastr.error('Unable to set service configuration');
+		};
+		servers.setServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success, error);
 	};
 
 	$scope.removeServiceConfig = function (key) {
-		servers.removeServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key});
+		var success = function (data, responseHeaders) {
+			//delete($scope.service.config[key]);
+		};
+		var error = function (httpResponse) {
+			toastr.error('Unable to remove service configuration');
+		};
+		servers.removeServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, null, success, error);
 	};
 
 	$scope.$on('$destroy', function (event) {
@@ -164,9 +196,17 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers) {
 
 /**
  * API Doc Controller
+ *
+ * Add some properties in the scope :
+ *		- Api				An object containing all the API documentation
+ *		- devHelper			An object containing all the dev-helper API documentation
+ *		- servers			An object containing the available servers for executing methods { api: [{_id: , url: , status: , hostname: }], dev-helper: []}
+ *
+ * Give some methods for reloading the documentation, or executing
+ * some methods...
  */
 
-function ApiDocCtrl($scope, doc, servers, $http) {
+function ApiDocCtrl($scope, doc, servers, $http, toastr) {
 
 	// Get API documentation
 	$scope.api = doc.getApi(
@@ -174,7 +214,7 @@ function ApiDocCtrl($scope, doc, servers, $http) {
 			$scope.api = value;
 		},
 		function (httpResponse) {
-			$scope.alert = {type: "danger", message: "Unable to retrieve documentation"};
+			toastr.error('Unable to retrieve API documentation');
 		}
 	);
 
@@ -184,7 +224,7 @@ function ApiDocCtrl($scope, doc, servers, $http) {
 			$scope.devHelper = value;
 		},
 		function (httpResponse) {
-			$scope.alert = {type: "danger", message: "Unable to retrieve documentation"};
+			toastr.error('Unable to retrieve dev-helper API documentation');
 		}
 	);
 
@@ -216,10 +256,17 @@ function ApiDocCtrl($scope, doc, servers, $http) {
 			});
 		},
 		function (httpResponse) {
-			$scope.alert = {type: "danger", message: "Unable to retrieve servers list"};
+			toastr.error('Unable to retrieve servers list');
 		}
 	);
 
+	/**
+	 * Get the label class for the fiven HTTM method.
+	 * For example, GET will return a "label-primary" string
+	 * to set the label in blue.
+	 *
+	 * @param method the HTTP method to get the class from (GET/POST...)
+	 */
 	$scope.getClassForMethod = function (method) {
 		switch (method.toUpperCase()) {
 			case 'GET':
@@ -235,19 +282,32 @@ function ApiDocCtrl($scope, doc, servers, $http) {
 		}
 	};
 
-	// Reload the API documentation from sources
+	/**
+	 * Reload the API documentation from sources
+	 */
 	$scope.reload = function () {
 		doc.reload(
 			function (value, responseHeaders) {
-				$scope.alert = {type: "success", message: "Request sent"};
+				toastr.success('API Documentation generating...');
 			},
 			function (httpResponse) {
-				$scope.alert = {type: "danger", message: "Unable to send the request, server is down ?"};
+				toastr.error('Unable to reload API Documentation');
 			}
 		);
 	};
 
+	/**
+	 * Execute some API command on a server.
+	 * The method checks the parameters before sending.
+	 * If no serverUrl passed, a random server will be chosen.
+	 *
+	 * @param serverUrl the server url to execute the method, like http://server:80/, might be null
+	 * @param apiName the name of the api, like "api" or "dev-helper"
+	 * @param route the route object to execute
+	 * @param routeNumber the route number in the HTML to retrieve params and send results
+	 */
 	$scope.execute = function (serverUrl, apiName, route, routeNumber) {
+		// If no serverUrl, get a default one.
 		if (serverUrl == null) {
 			for (var key in $scope.servers[apiName]) {
 				if ($scope.servers[apiName][key].status == 'running') {
@@ -255,10 +315,19 @@ function ApiDocCtrl($scope, doc, servers, $http) {
 				}
 			};
 		}
+		// If no serverUrl found, show an error
 		if (serverUrl == null) {
-			$scope.alert = {type: "danger", message: "No API running"};
+			toastr.error('No API running...');
 			return;
 		}
+		// If the server asked is not running, show an error
+		for (var key in $scope.servers[apiName]) {
+			if (serverUrl == $scope.servers[apiName][key].url && $scope.servers[apiName][key].status != 'running') {
+				toastr.error('The selected API in not running on this server');
+				return;
+			}
+		};
+		// Set parameters in the URL
 		var url = route.url;
 		var error = false;
 		route.params.forEach(function (param) {
@@ -272,9 +341,11 @@ function ApiDocCtrl($scope, doc, servers, $http) {
 				url = url.replace(key, value);
 			}
 		});
+		// If an error occurs with the parameters (missing)
 		if (error) {
 			return;
 		}
+		// Execute
 		$http[route.method](serverUrl + url)
 			.success(function (data, status, headers, config) {
 				route.data = data;
@@ -335,7 +406,7 @@ function CommandsCtrl($scope, socket) {
 
 
 /**
- * Installer Packages Cntroller
+ * Installer Packages Controller
  */
 
 function InstallersCtrl($scope, socket) {

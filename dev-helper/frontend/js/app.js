@@ -54,12 +54,40 @@ devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProv
 
 
 /**
+ * Toast notifications service
+ * This service loads some configuration like, the show duration,
+ * timeout... All the toastr methods are available:
+ *		- success()
+ *		- info()
+ *		- warning()
+ *		- error()
+ */
+devHelperApp.factory('toastr', function() {
+	toastr.options = {
+		"closeButton": false,
+		"debug": false,
+		"positionClass": "toast-top-right",
+		"onclick": null,
+		"showDuration": "10000",
+		"hideDuration": "1000",
+		"timeOut": "5000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	return toastr;
+});
+
+
+
+/**
  * Define a service "socket" with three methods:
  *      - on(eventName, callback)
  *      - emit(eventName, data, callback)
  *		- removeAllListeners()
  */
-
 devHelperApp.factory('socket', function ($rootScope) {
 
 	var socket = io.connect();
