@@ -1,5 +1,11 @@
+/**
+ * Application
+ */
 var adminPanelApp = angular.module('adminPanelApp', ['ngRoute', 'ngResource', 'globalFilters']);
 
+/**
+ * Router
+ */
 adminPanelApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
 	$routeProvider.when('/', {
@@ -25,12 +31,21 @@ adminPanelApp.config(['$routeProvider', '$locationProvider', function ($routePro
 
 }]);
 
+/**
+ * Devices resource
+ */
 adminPanelApp.factory('devices', ['$resource', function ($resource) {
 	return $resource('http://{{hostname}}:{{port}}/device/:id', {id: '@id'}, {
 		update: {method: 'PUT'}
 	});
 }]);
 
+/**
+ * Agents resource with some additional methods :
+ *		- update
+ *		- accept
+ *		- reject
+ */
 adminPanelApp.factory('installs', ['$resource', function ($resource) {
 	var actions = {
 		update: {
@@ -51,11 +66,11 @@ adminPanelApp.factory('installs', ['$resource', function ($resource) {
 /**
  * Toast notifications service
  * This service loads some configuration like, the show duration,
- * timeout... All the toastr methods are available:
- *		- success()
- *		- info()
- *		- warning()
- *		- error()
+ * timeout... This toastr methods are available:
+ *		- success(message, title)
+ *		- info(message, title)
+ *		- warning(message, title)
+ *		- error(message, title)
  */
 adminPanelApp.factory('toastr', function() {
 	toastr.options = {
@@ -71,16 +86,23 @@ adminPanelApp.factory('toastr', function() {
 		"hideEasing": "linear",
 		"showMethod": "fadeIn",
 		"hideMethod": "fadeOut"
-	}
-	return toastr;
+	};
+	return {
+		success:	function (message, title) { toastr.success(message, title) },
+		info:		function (message, title) { toastr.info(message, title) },
+		warning:	function (message, title) { toastr.warning(message, title) },
+		error:		function (message, title) { toastr.error(message, title) }
+	};
 });
 
 /**
- * Define a service "socket" with two services:
+ * Real-time connection service through socket.io
+ * Some methods are available
  *      - on(eventName, callback)
  *      - emit(eventName, data, callback)
+ *		- remove(eventName, callback)
  */
-adminPanelApp.factory('socket', ['toastr', function ($rootScope) {
+adminPanelApp.factory('socket', ['toastr', function () {
 
 	// Connect to the server
 	var socket = io.connect('http://{{hostname}}', {
@@ -103,27 +125,13 @@ adminPanelApp.factory('socket', ['toastr', function ($rootScope) {
 	// Return an object with some methods
 	return {
 		on: function(eventName, callback) {
-			socket.on(eventName, function() {
-				var args = arguments;
-				$rootScope.$apply(function () {
-					if (callback) {
-						callback.apply(socket, args);
-					}
-				});
-			});
+			socket.on(eventName, callback);
 		},
 		emit: function (eventName, data, callback) {
-			socket.emit(eventName, data, function () {
-				var args = arguments;
-				$rootScope.$apply(function () {
-					if (callback) {
-						callback.apply(socket, args);
-					}
-				});
-			});
+			socket.emit(eventName, data, callback);
 		},
-		removeAllListeners: function () {
-			//socket.removeAllListeners();
+		remove: function (eventName, callback) {
+			socket.removeListener(eventName, callback);
 		}
 	};
 

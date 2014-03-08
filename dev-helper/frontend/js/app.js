@@ -1,15 +1,11 @@
 /**
  * Application
  */
-
 var devHelperApp = angular.module('devHelperApp', ['ngRoute', 'ngResource']);
-
-
 
 /**
  * Router
  */
-
 devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
 	$routeProvider.when('/', {
@@ -51,79 +47,12 @@ devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProv
 
 }]);
 
-
-
 /**
- * Toast notifications service
- * This service loads some configuration like, the show duration,
- * timeout... All the toastr methods are available:
- *		- success()
- *		- info()
- *		- warning()
- *		- error()
+ * Documentation recource with some additional methods:
+ *		- reload
+ *		- getApi
+ *		- getDevHelper
  */
-devHelperApp.factory('toastr', function() {
-	toastr.options = {
-		"closeButton": false,
-		"debug": false,
-		"positionClass": "toast-top-right",
-		"onclick": null,
-		"showDuration": "10000",
-		"hideDuration": "1000",
-		"timeOut": "5000",
-		"extendedTimeOut": "1000",
-		"showEasing": "swing",
-		"hideEasing": "linear",
-		"showMethod": "fadeIn",
-		"hideMethod": "fadeOut"
-	}
-	return toastr;
-});
-
-
-
-/**
- * Define a service "socket" with three methods:
- *      - on(eventName, callback)
- *      - emit(eventName, data, callback)
- *		- removeAllListeners()
- */
-devHelperApp.factory('socket', function ($rootScope) {
-
-	var socket = io.connect();
-
-	return {
-
-		on: function(eventName, callback) {
-			socket.on(eventName, function() {
-				var args = arguments;
-				$rootScope.$apply(function () {
-					if (callback) {
-						callback.apply(socket, args);
-					}
-				});
-			});
-		},
-
-		emit: function (eventName, data, callback) {
-			socket.emit(eventName, data, function () {
-				var args = arguments;
-				$rootScope.$apply(function () {
-					if (callback) {
-						callback.apply(socket, args);
-					}
-				});
-			});
-		},
-
-		removeAllListeners: function () {
-			socket.removeAllListeners();
-		}
-
-	};
-
-});
-
 devHelperApp.factory('doc', ['$resource', function ($resource) {
 	var actions = {
 		reload: {
@@ -144,6 +73,16 @@ devHelperApp.factory('doc', ['$resource', function ($resource) {
 	return $resource('/api/doc/api/', {}, actions);
 }]);
 
+/**
+ * Servers resource with some additional methods:
+ *		- deleteService
+ *		- addServerConfig
+ *		- setServerConfig
+ *		- removeServerConfig
+ *		- addServiceConfig
+ *		- setServiceConfig
+ *		- removeServiceConfig
+ */
 devHelperApp.factory('servers', ['$resource', function ($resource) {
 	var actions = {
 		deleteService: {
@@ -183,4 +122,78 @@ devHelperApp.factory('servers', ['$resource', function ($resource) {
 		}
 	};
 	return $resource('/api/server/:id', {id: '@id'}, actions);
+}]);
+
+/**
+ * Toast notifications service
+ * This service loads some configuration like, the show duration,
+ * timeout... This toastr methods are available:
+ *		- success(message, title)
+ *		- info(message, title)
+ *		- warning(message, title)
+ *		- error(message, title)
+ */
+devHelperApp.factory('toastr', function() {
+	toastr.options = {
+		"closeButton": false,
+		"debug": false,
+		"positionClass": "toast-top-right",
+		"onclick": null,
+		"showDuration": "10000",
+		"hideDuration": "1000",
+		"timeOut": "5000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	};
+	return {
+		success:	function (message, title) { toastr.success(message, title) },
+		info:		function (message, title) { toastr.info(message, title) },
+		warning:	function (message, title) { toastr.warning(message, title) },
+		error:		function (message, title) { toastr.error(message, title) }
+	};
+});
+
+/**
+ * Real-time connection service through socket.io
+ * Some methods are available
+ *      - on(eventName, callback)
+ *      - emit(eventName, data, callback)
+ *		- remove(eventName, callback)
+ */
+devHelperApp.factory('socket', ['toastr', function () {
+
+	// Connect to the server
+	var socket = io.connect('http://{{hostname}}', {
+		'reconnection delay':			500,		// 0,5s
+		'reconnection limit':			10000,		// 10s (but in reality, 16s... Socket.io multiply always by two and look to be not over the limit: 1,2,4,8,16,32...)
+		'max reconnection attempts':	Infinity,
+	});
+
+	// Listen on connection/disconnection/reconnection events
+	socket.on('connect', function() {
+		toastr.success('Connected in real-time with server');
+	});
+	socket.on('disconnect', function() {
+		toastr.error('Real-time connection with server loosed...');
+	});
+	socket.on('reconnecting', function() {
+		toastr.info('Try to establish again a Real-time connection with server...');
+	});
+
+	// Return an object with some methods
+	return {
+		on: function(eventName, callback) {
+			socket.on(eventName, callback);
+		},
+		emit: function (eventName, data, callback) {
+			socket.emit(eventName, data, callback);
+		},
+		remove: function (eventName, callback) {
+			socket.removeListener(eventName, callback);
+		}
+	};
+
 }]);

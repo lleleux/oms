@@ -1,14 +1,11 @@
 /**
  * Header Controller
  */
-
 function HeaderCtrl($scope, $location) {
 	$scope.isActive = function (viewLocation) {
 		return viewLocation === $location.path();
 	};
 };
-
-
 
 /**
  * Services Controlles
@@ -21,7 +18,6 @@ function HeaderCtrl($scope, $location) {
  *
  * There are also some methods for starting, stopping services...
  */
-
 function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) {
 
 	$scope.console = {};
@@ -61,13 +57,15 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 		}
 	);
 
-	socket.on('console', function (hostname, service, data) {
+	var onConsoleListener = function (hostname, service, data) {
 		$scope.console[hostname][service] = data;
-	});
+	};
+	socket.on('console', onConsoleListener);
 
-	socket.on('refresh', function (data) {
+	var onRefreshListener = function (data) {
 		setServers(data);
-	});
+	};
+	socket.on('refresh', onRefreshListener);
 
 	$scope.start = function (hostname, services) {
 		socket.emit('startServices', {hostname: hostname, services: services});
@@ -187,12 +185,11 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 	};
 
 	$scope.$on('$destroy', function (event) {
-		socket.removeAllListeners();
+		socket.remove('console', onConsoleListener);
+		socket.remove('refresh', onRefreshListener);
 	});
 
 };
-
-
 
 /**
  * API Doc Controller
@@ -205,7 +202,6 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
  * Give some methods for reloading the documentation, or executing
  * some methods...
  */
-
 function ApiDocCtrl($scope, doc, servers, $http, toastr) {
 
 	// Get API documentation
@@ -361,15 +357,12 @@ function ApiDocCtrl($scope, doc, servers, $http, toastr) {
 
 };
 
-
-
 /**
  * Commands Controller
  */
-
 function CommandsCtrl($scope, socket) {
 
-	socket.on('commands', function (data) {
+	var onCommandsListener = function (data) {
 		commands = JSON.parse(data);
 		$scope.scriptCommands = [];
 		$scope.moduleCommands = [];
@@ -380,11 +373,13 @@ function CommandsCtrl($scope, socket) {
 				$scope.moduleCommands.push(command);
 			}
 		});
-	});
+	};
+	socket.on('commands', onCommandsListener);
 
-	socket.on('scripts', function (data) {
+	var onScriptsListener = function (data) {
 		$scope.scripts = JSON.parse(data);
-	});
+	};
+	socket.on('scripts', onScriptsListener);
 
 	$scope.reloadFromDir = function () {
 		socket.emit('reloadScripts');
@@ -398,17 +393,15 @@ function CommandsCtrl($scope, socket) {
 	socket.emit('getScripts');
 
 	$scope.$on('$destroy', function (event) {
-		socket.removeAllListeners();
+		socket.remove('commands', onCommandsListener);
+		socket.remove('scripts', onScriptsListener);
 	});
 
 };
 
-
-
 /**
  * Installer Packages Controller
  */
-
 function InstallersCtrl($scope, socket) {
 
 	$scope.installers = [];
@@ -417,10 +410,15 @@ function InstallersCtrl($scope, socket) {
 		socket.emit('generateInstallers');
 	};
 
-	socket.on('installers', function (installers) {
-		$scope.installers = installers;
-	})
-
 	socket.emit('getInstallers');
+
+	var onInstallersListener = function (installers) {
+		$scope.installers = installers;
+	};
+	socket.on('installers', onInstallersListener);
+
+	$scope.$on('$destroy', function (event) {
+		socket.remove('installers', onInstallersListener);
+	});
 
 };

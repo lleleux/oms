@@ -4,14 +4,11 @@
  * Adds some methods to the scope :
  *		- isActive()	Return whether the location is active or not
  */
-
 function HeaderCtrl($scope, $location) {
 	$scope.isActive = function (viewLocation) {
 		return viewLocation === $location.path();
 	};
 };
-
-
 
 /**
  * Devices Controller
@@ -19,7 +16,6 @@ function HeaderCtrl($scope, $location) {
  * Adds some attributes to the scope :
  *		- devices
  */
-
 function DevicesCtrl($scope, devices) {
 
 	// Get the devices list from the API
@@ -33,8 +29,6 @@ function DevicesCtrl($scope, devices) {
 	);
 
 };
-
-
 
 /**
  * Agents Controller
@@ -51,7 +45,6 @@ function DevicesCtrl($scope, devices) {
  *		- reject(id)				Reject an agent
  *
  */
-
 function InstallsCtrl($scope, $window, installs, socket) {
 
 	/**
@@ -119,15 +112,17 @@ function InstallsCtrl($scope, $window, installs, socket) {
 	};
 
 	// Listen for events when an installer is available on the server
-	socket.on('installer', function (id) {
+	var onInstallerListener = function (id) {
 		$('#download' + id).button('reset');
 		window.location.assign('/files/installers/' + id + '.deb');
-	});
+	};
+	socket.on('installer', onInstallerListener);
 
 	// Listen for events when an installer is generating on the server
-	socket.on('generatingInstaller', function (id) {
+	var onGeneratingInstallerListener = function (id) {
 		$('#download' + id).button('loading');
-	});
+	};
+	socket.on('generatingInstaller', onGeneratingInstallerListener);
 
 	/**
 	 * Accept an agent by its id.
@@ -157,9 +152,10 @@ function InstallsCtrl($scope, $window, installs, socket) {
 		);
 	};
 
-	// Remove all the listeners when the controller is destroyed
+	// Remove all the controller listeners when the controller is destroyed
 	$scope.$on('$destroy', function (event) {
-		socket.removeAllListeners();
+		socket.remove('installer', onInstallerListener);
+		socket.remove('installer', onGeneratingInstallerListener);
 	});
 
 };
