@@ -84,7 +84,7 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 
 	$scope.getLink = function (server, serviceName) {
 		if (serviceName == 'oms-dev-helper' || serviceName == 'oms-admin-panel') {
-			var host = server.config.maintenanceHost ? server.config.maintenanceHost : server.hostname;
+			var host = server.config.publicHost ? server.config.publicHost : server.hostname;
 			return 'http://' + host + ':' + server.services[serviceName].config.port;
 		}
 	};
@@ -232,7 +232,7 @@ function ApiDocCtrl($scope, doc, servers, $http, toastr) {
 				'dev-helper':	[]
 			};
 			value.forEach(function (server) {
-				var host = server.config.maintenanceHost ? server.config.maintenanceHost : server.hostname;
+				var host = server.config.publicHost ? server.config.publicHost : server.hostname;
 				if (server.services['oms-api']) {
 					$scope.servers.api.push({
 						_id:		server._id,
