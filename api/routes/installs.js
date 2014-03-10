@@ -75,10 +75,14 @@ var findAll = function(request, response) {
 var insert = function(request, response) {
 	request.body.status = 'created';
 	installsDao.insert(request.body, function (result) {
-		ca.initializeAgent(result[0]._id, function () {
-			installsDao.findById(result[0]._id, function (item) {
-				response.send(item);
-			});
+		ca.initializeAgent(result[0]._id, function (err) {
+			if (err) {
+				response.send(500, {error: 'Unable to create agent credentials: ' + err.message});
+			} else {
+				installsDao.findById(result[0]._id, function (item) {
+					response.send(item);
+				});
+			}
 		});
 	});
 };

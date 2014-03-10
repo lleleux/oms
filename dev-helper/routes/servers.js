@@ -109,7 +109,7 @@ var removeService = function (request, response) {
 				var item = {};
 				item['services.' + request.params.name] = 1;
 				var id = new db.BSON.ObjectID(request.params.id);
-				serversDao._update({_id: id}, {$unset: item}, {}, function (error, result) {
+				serversDao._update({_id: id}, {$unset: item}, {}, function (err, result) {
 					response.send(result);
 				});
 			}
@@ -190,7 +190,7 @@ var removeServerConfig = function (request, response) {
 				var item = {};
 				item['config.' + request.params.key] = 1;
 				var id = new db.BSON.ObjectID(request.params.id);
-				serversDao._update({_id: id}, {$unset: item}, {}, function (error, result) {
+				serversDao._update({_id: id}, {$unset: item}, {}, function (err, result) {
 					response.send(result);
 				});
 			} else {
@@ -306,7 +306,7 @@ var removeServiceConfig = function (request, response) {
 				var item = {};
 				item['services.' + request.params.name + '.config.' + request.params.key] = 1;
 				var id = new db.BSON.ObjectID(request.params.id);
-				serversDao._update({_id: id}, {$unset: item}, {}, function (error, result) {
+				serversDao._update({_id: id}, {$unset: item}, {}, function (err, result) {
 					response.send(result);
 				});
 			} else {
