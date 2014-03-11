@@ -120,7 +120,7 @@ var removeService = function (request, response) {
 	serversDao.findById(request.params.id, function (err, server) {
 		if (server) {
 			// Delete server
-			if (Object.keys(server.services).length == 1 && server.services[request.params.name] != undefined) {
+			if (Object.keys(server.services).length == 1 && server.services[request.params.name] !== undefined) {
 				serversDao.remove(request.params.id, function (err, result) {
 					if (err) { response.send(503, {error: 'Database error: ' + err.message}); }
 					else { response.send(200, {removed: result}); }
@@ -156,7 +156,7 @@ var removeService = function (request, response) {
 var getServerConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (err, server) {
 		if (server) {
-			if (server.config[request.params.key] != undefined) {
+			if (server.config[request.params.key] !== undefined) {
 				response.send(200, server.config[request.params.key]);
 			} else {
 				response.send(404, {error: 'Unable to find server config with key ' + request.params.key});
@@ -213,7 +213,7 @@ var setServerConfig = function (request, response) {
 var removeServerConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (err, server) {
 		if (server) {
-			if (server.config[request.params.key] != undefined) {
+			if (server.config[request.params.key] !== undefined) {
 				var item = {};
 				item['config.' + request.params.key] = 1;
 				var id = new db.BSON.ObjectID(request.params.id);
@@ -248,12 +248,12 @@ var removeServerConfig = function (request, response) {
 var addServerConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (err, server) {
 		if (server) {
-			if (!server.config[request.params.key] != undefined) {
+			if (server.config[request.params.key] === undefined) {
 				var data = {};
 				data['config.' + request.params.key] = request.body.value;
 				serversDao.update(server._id, data, function (err, result) {
 					if (err) { response.send(503, {error: 'Database error: ' + err.message}); }
-					else { response.send(200, result); }
+					else { response.send(200, {inserted: result}); }
 				});
 			} else {
 				response.send(409, {error: 'A server config already exists with key ' + request.params.key});
@@ -278,7 +278,7 @@ var addServerConfig = function (request, response) {
 var getServiceConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (err, server) {
 		if (server) {
-			if (server.config[request.params.key] != undefined) {
+			if (server.config[request.params.key] !== undefined) {
 				response.send(200, server.config[request.params.key]);
 			} else {
 				response.send(404, {error: 'Unable to find service config with key ' + request.params.key});
@@ -336,7 +336,7 @@ var setServiceConfig = function (request, response) {
 var removeServiceConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (err, server) {
 		if (server) {
-			if (server.services[request.params.name].config[request.params.key] != undefined) {
+			if (server.services[request.params.name].config[request.params.key] !== undefined) {
 				var item = {};
 				item['services.' + request.params.name + '.config.' + request.params.key] = 1;
 				var id = new db.BSON.ObjectID(request.params.id);
@@ -371,12 +371,12 @@ var removeServiceConfig = function (request, response) {
 var addServiceConfig = function (request, response) {
 	serversDao.findById(request.params.id, function (err, server) {
 		if (server) {
-			if (!server.config[request.params.key] != undefined) {
+			if (server.config[request.params.key] === undefined) {
 				var data = {};
 				data['services.' + request.params.name + '.config.' + request.params.key] = request.body.value;
 				serversDao.update(server._id, data, function (err, result) {
 					if (err) { response.send(503, {error: 'Database error: ' + err.message}); }
-					else { response.send(200, result); }
+					else { response.send(200, {inserted: result}); }
 				});
 			} else {
 				response.send(409, {error: 'A service config already exists with key ' + request.params.key});
