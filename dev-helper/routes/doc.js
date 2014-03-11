@@ -39,8 +39,12 @@ var devHelperDao = new Dao('dev-helper', 'doc');
  * @name 	Get all the API documentation
  */
 var findAllApi = function (request, response) {
-	apiDao.findAll(function (items) {
-		response.send(items);
+	apiDao.findAll(function (err, items) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			response.send(200, items);
+		}
 	});
 };
 
@@ -53,8 +57,12 @@ var findAllApi = function (request, response) {
  * @name 	Get all the dev-helper API documentation
  */
 var findAllDevHelper = function (request, response) {
-	devHelperDao.findAll(function (items) {
-		response.send(items);
+	devHelperDao.findAll(function (err, items) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			response.send(200, items);
+		}
 	});
 };
 
@@ -70,7 +78,7 @@ var findAllDevHelper = function (request, response) {
  */
 var reload = function (request, response) {
 	apiAnalyzer.analyze();
-	response.send(200);
+	response.send(200, {info: 'Documentation reloading...'});
 };
 
 

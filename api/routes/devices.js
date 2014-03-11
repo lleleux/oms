@@ -15,6 +15,7 @@
 
 // Global
 var logger = require('logger');
+var db = require('db');
 
 
 
@@ -23,9 +24,8 @@ var logger = require('logger');
  */
 
 // DAO
-var Dao = require('db').Dao;
-var devices = new Dao('devices');
-var agentManagerMessages = new Dao('agentManagerMessages');
+var devicesDao = new db.Dao('devices');
+var agentManagerMessagesDao = new db.Dao('agentManagerMessages');
 
 
 
@@ -39,8 +39,13 @@ var agentManagerMessages = new Dao('agentManagerMessages');
  */
 
 var findById = function (request, response) {
-	devices.findById(request.params.id, function (item) {
-		response.send(item);
+	devicesDao.findById(request.params.id, function (err, item) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			if (item) { response.send(200, item); }
+			else { response.send(404, {error: 'Unable to find device with id ' + request.params.id}); }
+		}
 	});
 };
 
@@ -54,8 +59,12 @@ var findById = function (request, response) {
  */
 
 var findAll = function (request, response) {
-	devices.findAll(function (items) {
-		response.send(items);
+	devicesDao.findAll(function (err, items) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			response.send(200, items);
+		}
 	});
 };
 
@@ -70,8 +79,12 @@ var findAll = function (request, response) {
  */
 
 var insert = function (request, response) {
-	devices.insert(request.body, function (result) {
-		response.send(result);
+	devicesDao.insert(request.body, function (err, item) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			response.send(200, item);
+		}
 	});
 };
 
@@ -87,8 +100,13 @@ var insert = function (request, response) {
  */
 
 var update = function (request, response) {
-	devices.update(request.params.id, request.body, function (result) {
-		response.send(result);
+	devicesDao.update(request.params.id, request.body, function (err, result) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			if (result === 0) { response.send(404, {error: 'Unable to find device with id ' + request.params.id}); }
+			else { response.send(200, {updated: result}); }
+		}
 	});
 };
 
@@ -103,8 +121,13 @@ var update = function (request, response) {
  */
 
 var remove = function (request, response) {
-	devices.remove(request.params.id, function (result) {
-		response.send(result);
+	devicesDao.remove(request.params.id, function (err, result) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			if (result === 0) { response.send(404, {error: 'Unable to find device with id ' + request.params.id}); }
+			else { response.send(200, {removed: result}); }
+		}
 	});
 };
 
@@ -129,8 +152,12 @@ var execute = function (request, response) {
 		status:		'new',
 		date:		new Date().getTime()	// TODO identify the connected host/user that asked the command
 	};
-	agentManagerMessages.insert(item, function (items) {
-		response.send(items[0]);
+	agentManagerMessagesDao.insert(item, function (err, items) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			response.send(200, items[0]);
+		}
 	});
 };
 

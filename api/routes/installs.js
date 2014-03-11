@@ -40,8 +40,13 @@ var devicesDao = new db.Dao('devices');
  */
 
 var findById = function(request, response) {
-	installsDao.findById(request.params.id, function (item) {
-		response.send(item);
+	installsDao.findById(request.params.id, function (err, item) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			if (item) { response.send(200, item); }
+			else { response.send(404, {error: 'Unable to find agent with id ' + request.params.id}); }
+		}
 	});
 };
 
@@ -55,8 +60,12 @@ var findById = function(request, response) {
  */
 
 var findAll = function(request, response) {
-	installsDao.findAll(function (items) {
-		response.send(items);
+	installsDao.findAll(function (err, items) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			response.send(200, items);
+		}
 	});
 };
 
@@ -74,13 +83,18 @@ var findAll = function(request, response) {
 
 var insert = function(request, response) {
 	request.body.status = 'created';
-	installsDao.insert(request.body, function (result) {
+	installsDao.insert(request.body, function (err, result) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+			return;
+		}
 		ca.initializeAgent(result[0]._id, function (err) {
 			if (err) {
 				response.send(500, {error: 'Unable to create agent credentials: ' + err.message});
 			} else {
-				installsDao.findById(result[0]._id, function (item) {
-					response.send(item);
+				installsDao.findById(result[0]._id, function (err, item) {
+					if (err) { response.send(503, {error: 'Database error: ' + err.message}); }
+					else { response.send(200, item); }
 				});
 			}
 		});
@@ -99,8 +113,13 @@ var insert = function(request, response) {
  */
 
 var update = function(request, response) {
-	installsDao.update(request.params.id, request.body, function (result) {
-		response.send({count: result});
+	installsDao.update(request.params.id, request.body, function (err, result) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			if (result === 0) { response.send(404, {error: 'Unable to find agent with id ' + request.params.id}); }
+			else { response.send(200, {updated: result}); }
+		}
 	});
 };
 
@@ -115,8 +134,13 @@ var update = function(request, response) {
  */
 
 var remove = function(request, response) {
-	installsDao.remove(request.params.id, function (result) {
-		response.send({count: result});
+	installsDao.remove(request.params.id, function (err, result) {
+		if (err) {
+			response.send(503, {error: 'Database error: ' + err.message});
+		} else {
+			if (result === 0) { response.send(404, {error: 'Unable to find agent with id ' + request.params.id}); }
+			else { response.send(200, {removed: result}); }
+		}
 	});
 };
 
@@ -136,21 +160,28 @@ var remove = function(request, response) {
  * @param 	id {String} required The id of the installation to accept
  */
 var accept = function (request, response) {
-	installsDao.findById(request.params.id, function (install) {
+	installsDao.findById(request.params.id, function (err, install) {
 		if (install) {
 			if (install.status === 'installed') {
 				delete(install._id);
 				install.status = 'accepted';
 				install.acceptedDate = new Date().getTime();
-				devicesDao.insert({_id: new db.BSON.ObjectID(request.params.id), agent: install}, function (device) {
-					installsDao.remove(request.params.id);
-					response.send(200);
+				devicesDao.insert({_id: new db.BSON.ObjectID(request.params.id), agent: install}, function (err, device) {
+					if (err) {
+						response.send(503, {error: 'Database error: ' + err.message});
+					} else {
+						installsDao.remove(request.params.id, function (err, result) {
+							if (err) { response.send(503, {error: 'Database error: ' + err.message}); }
+							else { response.send(200, {info: 'Agent ' + request.params.id + ' accepted'); }
+						});
+					}
 				});
 			} else {
 				response.send(409, {error: 'Agent must be in status "installed" to be accepted. Current status: ' + install.status});
 			}
 		} else {
-			response.send(404, {error: 'Agent not found'});
+			if (err) { response.send(503, {error: 'Database error: ' + err.message}); }
+			else { response.send(404, {error: 'Unable to find agent with id ' + request.params.id}); }
 		}
 	});
 };
@@ -166,18 +197,23 @@ var accept = function (request, response) {
  * @param 	reason {String} optional The reason of the reject
  */
 var reject = function (request, response) {
-	installsDao.findById(request.params.id, function (install) {
+	installsDao.findById(request.params.id, function (err, install) {
 		if (install) {
 			if (install.status === 'installed') {
-				installsDao.update(request.params.id, {status: 'banned', banDate: new Date().getTime(), reason: request.params.reason}, function (result) {
-					ca.generateCrl();
-					response.send(200);
+				installsDao.update(request.params.id, {status: 'banned', banDate: new Date().getTime(), reason: request.params.reason}, function (err, result) {
+					if (err) {
+						response.send(503, {error: 'Database error: ' + err.message});
+					} else {
+						ca.generateCrl();
+						response.send(200; {info: 'Agent ' + request.params.id + ' rejected'});
+					}
 				});
 			} else {
 				response.send(409, {error: 'Agent must be in status "installed" to be rejected. Current status: ' + install.status});
 			}
 		} else {
-			response.send(404, {error: 'Agent not found'});
+			if (err) { response.send(503, {error: 'Database error: ' + err.message}); }
+			else { response.send(404, {error: 'Unable to find agent with id ' + request.params.id}); }
 		}
 	});
 };
