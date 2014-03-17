@@ -360,65 +360,82 @@ function ApiDocCtrl($scope, doc, servers, $http, toastr) {
 /**
  * Commands Controller
  */
-function CommandsCtrl($scope, socket) {
+function CommandsCtrl($scope, command, script) {
 
-	var onCommandsListener = function (data) {
-		commands = JSON.parse(data);
-		$scope.scriptCommands = [];
-		$scope.moduleCommands = [];
-		commands.forEach(function (command) {
-			if (command.script !== undefined) {
-				$scope.scriptCommands.push(command);
-			} else {
-				$scope.moduleCommands.push(command);
-			}
-		});
-	};
-	socket.on('commands', onCommandsListener);
+	// Get commands from API
+	command.query(
+		function (commands, responseHeaders) {
+			$scope.scriptCommands = [];
+			$scope.moduleCommands = [];
+			commands.forEach(function (command) {
+				if (command.script !== undefined) {
+					$scope.scriptCommands.push(command);
+				} else {
+					$scope.moduleCommands.push(command);
+				}
+			});
+		},
+		function (httpResponse) {
+			toastr.error('Unable to get commands');
+		}
+	);
 
-	var onScriptsListener = function (data) {
-		$scope.scripts = JSON.parse(data);
-	};
-	socket.on('scripts', onScriptsListener);
+	// Get scripts from API
+	script.query(
+		function (value, responseHeaders) {
+			$scope.scripts = value;
+		},
+		function (httpResponse) {
+			toastr.error('Unable to get commands');
+		}
+	);
 
+	/**
+	 * Reload scripts from sources, call the api reload method.
+	 */
 	$scope.reloadFromDir = function () {
-		socket.emit('reloadScripts');
+		command.reload(
+			function (value, responseHeaders) {
+				toastr.success('Commands and script reloading...');
+			},
+			function (httpResponse) {
+				toastr.error('Unable to reload commands and scripts');
+			}
+		);
 	};
 
 	$scope.decode = function (input) {
 		return atob(input);
 	};
 
-	socket.emit('getCommands');
-	socket.emit('getScripts');
-
-	$scope.$on('$destroy', function (event) {
-		socket.remove('commands', onCommandsListener);
-		socket.remove('scripts', onScriptsListener);
-	});
-
 };
 
 /**
  * Installer Packages Controller
  */
-function InstallersCtrl($scope, socket) {
+function InstallersCtrl($scope, installer, toastr) {
 
 	$scope.installers = [];
 
+	// Get installers list
+	$scope.installers = installer.query(
+		function (value, responseHeaders) {
+			$scope.installers = value;
+		},
+		function (httpResponse) {
+			toastr.error('Unable to retrieve installer list');
+		}
+	);
+
 	$scope.reload = function () {
-		socket.emit('generateInstallers');
+		installer.generate(
+			function (value, responseHeaders) {
+				toastr.info('Services installers generating...');
+			},
+			function (httpResponse) {
+				toastr.error('Unable to generate installers');
+			}
+		);
 	};
-
-	socket.emit('getInstallers');
-
-	var onInstallersListener = function (installers) {
-		$scope.installers = installers;
-	};
-	socket.on('installers', onInstallersListener);
-
-	$scope.$on('$destroy', function (event) {
-		socket.remove('installers', onInstallersListener);
-	});
 
 };

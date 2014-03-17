@@ -48,7 +48,7 @@ devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProv
 }]);
 
 /**
- * Documentation recource with some additional methods:
+ * Documentation resource with some additional methods:
  *		- reload
  *		- getApi
  *		- getDevHelper
@@ -71,6 +71,20 @@ devHelperApp.factory('doc', ['$resource', function ($resource) {
 		}
 	};
 	return $resource('/api/doc/api/', {}, actions);
+}]);
+
+/**
+ * Installers resource with some additional methods:
+ *		- generate
+ */
+devHelperApp.factory('installer', ['$resource', function ($resource) {
+	var actions = {
+		generate: {
+			method:	'POST',
+			url: 	'/api/installer/generate'
+		}
+	};
+	return $resource('/api/installer', {}, actions);
 }]);
 
 /**
@@ -122,6 +136,31 @@ devHelperApp.factory('servers', ['$resource', function ($resource) {
 		}
 	};
 	return $resource('/api/server/:id', {id: '@id'}, actions);
+}]);
+
+/**
+ * Command resource
+ */
+devHelperApp.factory('command', ['$resource', function ($resource) {
+	var actions = {
+		update: {
+			method: 'PUT'
+		},
+		reload: {
+			method:	'POST',
+			url: 	'/api/command/reload'
+		}
+	}
+	return $resource('/api/command/:id', {id: '@id'}, actions);
+}]);
+
+/**
+ * Script resource
+ */
+devHelperApp.factory('script', ['$resource', function ($resource) {
+	return $resource('/api/script/:id', {id: '@id'}, {
+		update: {method: 'PUT'}
+	});
 }]);
 
 /**

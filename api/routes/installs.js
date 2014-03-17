@@ -38,7 +38,6 @@ var devicesDao = new db.Dao('devices');
  * @name	Get an install
  * @param	id {String} required The device id
  */
-
 var findById = function(request, response) {
 	installsDao.findById(request.params.id, function (err, item) {
 		if (err) {
@@ -50,15 +49,12 @@ var findById = function(request, response) {
 	});
 };
 
-
-
 /**
  * Get all the installations.
  *
  * @method 	findAll
  * @name 	Get all the installations
  */
-
 var findAll = function(request, response) {
 	installsDao.findAll(function (err, items) {
 		if (err) {
@@ -69,8 +65,6 @@ var findAll = function(request, response) {
 	});
 };
 
-
-
 /**
  * Add an installation.
  * This method create also a private key and a certificate
@@ -80,7 +74,6 @@ var findAll = function(request, response) {
  * @name 	Add an installation
  * TODO param body
  */
-
 var insert = function(request, response) {
 	request.body.status = 'created';
 	installsDao.insert(request.body, function (err, result) {
@@ -101,8 +94,6 @@ var insert = function(request, response) {
 	});
 };
 
-
-
 /**
  * Update the installation with the given id.
  *
@@ -111,7 +102,6 @@ var insert = function(request, response) {
  * @param 	id {String} required The id of the installation to update
  * TODO param body
  */
-
 var update = function(request, response) {
 	installsDao.update(request.params.id, request.body, function (err, result) {
 		if (err) {
@@ -123,8 +113,6 @@ var update = function(request, response) {
 	});
 };
 
-
-
 /**
  * Remove the installation with the given id.
  *
@@ -132,7 +120,6 @@ var update = function(request, response) {
  * @name 	Remove an installation
  * @param 	id {String} required The id of the installation to remove
  */
-
 var remove = function(request, response) {
 	installsDao.remove(request.params.id, function (err, result) {
 		if (err) {
@@ -143,8 +130,6 @@ var remove = function(request, response) {
 		}
 	});
 };
-
-
 
 /**
  * Create a new device with the id of the agent, and insert the agent's
@@ -185,8 +170,6 @@ var accept = function (request, response) {
 		}
 	});
 };
-
-
 
 /**
  * Reject an agent and mark his status as banned.
