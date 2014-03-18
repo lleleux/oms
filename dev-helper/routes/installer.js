@@ -1,8 +1,8 @@
 /**
  * This API allows to get OMS Services installers.
  *
- * @module	installers
- * @name	Services installers
+ * @module	installer
+ * @name	Services installer
  */
 
 

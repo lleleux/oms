@@ -3,8 +3,8 @@
  * additionnal methods to accept ar reject an installation
  * for example.
  *
- * @module	installs
- * @name	Installations
+ * @module	install
+ * @name	Installation
  */
 
 
@@ -157,7 +157,7 @@ var accept = function (request, response) {
 					} else {
 						installsDao.remove(request.params.id, function (err, result) {
 							if (err) { response.send(503, {error: 'Database error: ' + err.message}); }
-							else { response.send(200, {info: 'Agent ' + request.params.id + ' accepted'); }
+							else { response.send(200, {info: 'Agent ' + request.params.id + ' accepted'}); }
 						});
 					}
 				});
@@ -188,7 +188,7 @@ var reject = function (request, response) {
 						response.send(503, {error: 'Database error: ' + err.message});
 					} else {
 						ca.generateCrl();
-						response.send(200; {info: 'Agent ' + request.params.id + ' rejected'});
+						response.send(200, {info: 'Agent ' + request.params.id + ' rejected'});
 					}
 				});
 			} else {

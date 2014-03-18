@@ -53,7 +53,7 @@ devHelperApp.config(['$routeProvider', '$locationProvider', function ($routeProv
  *		- getApi
  *		- getDevHelper
  */
-devHelperApp.factory('doc', ['$resource', function ($resource) {
+devHelperApp.factory('docResource', ['$resource', function ($resource) {
 	var actions = {
 		reload: {
 			method:	'POST',
@@ -77,7 +77,7 @@ devHelperApp.factory('doc', ['$resource', function ($resource) {
  * Installers resource with some additional methods:
  *		- generate
  */
-devHelperApp.factory('installer', ['$resource', function ($resource) {
+devHelperApp.factory('installerResource', ['$resource', function ($resource) {
 	var actions = {
 		generate: {
 			method:	'POST',
@@ -97,51 +97,80 @@ devHelperApp.factory('installer', ['$resource', function ($resource) {
  *		- setServiceConfig
  *		- removeServiceConfig
  */
-devHelperApp.factory('servers', ['$resource', function ($resource) {
+devHelperApp.factory('serverResource', ['$resource', function ($resource) {
 	var actions = {
-		deleteService: {
-			method:	'DELETE',
-			url: 	'/api/server/:id/service/:name',
-			params:	{id: '@id', name: '@name'}
-		},
-		addServerConfig: {
+		addConfig: {
 			method:	'PUT',
 			url:	'/api/server/:id/config/:key',
 			params:	{id: '@id', key: '@key'}
 		},
-		setServerConfig: {
+		setConfig: {
 			method:	'POST',
 			url:	'/api/server/:id/config/:key',
 			params:	{id: '@id', key: '@key'}
 		},
-		removeServerConfig: {
+		removeConfig: {
 			method:	'DELETE',
 			url:	'/api/server/:id/config/:key',
 			params:	{id: '@id', key: '@key'}
-		},
-		addServiceConfig: {
-			method:	'PUT',
-			url:	'/api/server/:id/service/:name/config/:key',
-			params:	{id: '@id', name: '@name', key: '@key'}
-		},
-		setServiceConfig: {
-			method:	'POST',
-			url:	'/api/server/:id/service/:name/config/:key',
-			params:	{id: '@id', name: '@name', key: '@key'}
-		},
-		removeServiceConfig: {
-			method:	'DELETE',
-			url:	'/api/server/:id/service/:name/config/:key',
-			params:	{id: '@id', name: '@name', key: '@key'}
 		}
 	};
 	return $resource('/api/server/:id', {id: '@id'}, actions);
 }]);
 
 /**
+ * Service resource with some additional methods:
+ *		- deleteService
+ *		- addServiceConfig
+ *		- setServiceConfig
+ *		- removeServiceConfig
+ */
+devHelperApp.factory('serviceResource', ['$resource', function ($resource) {
+	var actions = {
+		addConfig: {
+			method:	'PUT',
+			url:	'/api/server/:id/service/:name/config/:key',
+			params:	{id: '@id', name: '@name', key: '@key'}
+		},
+		setConfig: {
+			method:	'POST',
+			url:	'/api/server/:id/service/:name/config/:key',
+			params:	{id: '@id', name: '@name', key: '@key'}
+		},
+		removeConfig: {
+			method:	'DELETE',
+			url:	'/api/server/:id/service/:name/config/:key',
+			params:	{id: '@id', name: '@name', key: '@key'}
+		},
+		start: {
+			method:	'POST',
+			url:	'/api/server/:id/service/:name/start',
+			params:	{id: '@id', name: '@name'}
+		},
+		stop: {
+			method:	'POST',
+			url:	'/api/server/:id/service/:name/stop',
+			params:	{id: '@id', name: '@name'}
+		},
+		restart: {
+			method:	'POST',
+			url:	'/api/server/:id/service/:name/restart',
+			params:	{id: '@id', name: '@name'}
+		},
+		getLogs: {
+			method:	'GET',
+			url:	'/api/server/:id/service/:name/logs',
+			params:	{id: '@id', name: '@name'},
+			responseType:	'text'
+		}
+	};
+	return $resource('/api/server/:id/service/:name', {id: '@id'}, actions);
+}]);
+
+/**
  * Command resource
  */
-devHelperApp.factory('command', ['$resource', function ($resource) {
+devHelperApp.factory('commandResource', ['$resource', function ($resource) {
 	var actions = {
 		update: {
 			method: 'PUT'
@@ -157,7 +186,7 @@ devHelperApp.factory('command', ['$resource', function ($resource) {
 /**
  * Script resource
  */
-devHelperApp.factory('script', ['$resource', function ($resource) {
+devHelperApp.factory('scriptResource', ['$resource', function ($resource) {
 	return $resource('/api/script/:id', {id: '@id'}, {
 		update: {method: 'PUT'}
 	});

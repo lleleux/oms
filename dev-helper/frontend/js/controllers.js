@@ -18,7 +18,7 @@ function HeaderCtrl($scope, $location) {
  *
  * There are also some methods for starting, stopping services...
  */
-function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) {
+function ServicesCtrl($scope, $location, $routeParams, serverResource, serviceResource, toastr) {
 
 	$scope.console = {};
 
@@ -35,20 +35,27 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 		}
 		// If a service is selected, add a service value, ask for console
 		if ($routeParams.serviceName) {
-			if (!$scope.console[$routeParams.hostname]) {
-				$scope.console[$routeParams.hostname] = {};
-			}
-			socket.emit('getConsole', {hostname: $routeParams.hostname, serviceName: $routeParams.serviceName});
+			// Search for service in services list
 			for (var key in $scope.server.services) {
 				if ($scope.server.services[key].name == $routeParams.serviceName) {
 					$scope.service = $scope.server.services[key];
 				}
 			}
+			// Remove previous console
+			if (!$scope.console[$routeParams.hostname]) {
+				$scope.console[$routeParams.hostname] = {};
+			}
+			// Ask for console
+			$scope.console[$routeParams.hostname][$routeParams.serviceName] = $scope.servers = serviceResource.getLogs(
+				{id: $scope.server._id, name: $routeParams.serviceName},
+				function (value, responseHeaders) {	$scope.console[$routeParams.hostname][$routeParams.serviceName] = value; },
+				function (httpResponse) { toastr.error('Unable to retrieve console'); }
+			);
 		}
 	}
 
 	// Get servers
-	$scope.servers = servers.query(
+	$scope.servers = serverResource.query(
 		function (value, responseHeaders) {
 			setServers(value);
 		},
@@ -57,29 +64,19 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 		}
 	);
 
-	var onConsoleListener = function (hostname, service, data) {
-		$scope.console[hostname][service] = data;
-	};
-	socket.on('console', onConsoleListener);
-
-	var onRefreshListener = function (data) {
-		setServers(data);
-	};
-	socket.on('refresh', onRefreshListener);
-
-	$scope.start = function (hostname, services) {
-		socket.emit('startServices', {hostname: hostname, services: services});
-		toastr.info('Service starting on ' + hostname);
+	$scope.start = function (serverId, serviceName) {
+		serviceResource.start({id: serverId, name: serviceName});
+		toastr.info(serviceName + ' starting on ' + _getServer(serverId).hostname);
 	};
 
-	$scope.stop = function (hostname, services) {
-		socket.emit('stopServices', {hostname: hostname, services: services});
-		toastr.info('Service shutting down on ' + hostname);
+	$scope.stop = function (serverId, serviceName) {
+		serviceResource.stop({id: serverId, name: serviceName});
+		toastr.info(serviceName + ' shutting down on ' + _getServer(serverId).hostname);
 	};
 
-	$scope.restart = function (hostname, services) {
-		socket.emit('restartServices', {hostname: hostname, services: services});
-		toastr.info('Service restarting on ' + hostname);
+	$scope.restart = function (serverId, serviceName) {
+		serviceResource.restart({id: serverId, name: serviceName});
+		toastr.info(serviceName + ' restarting on ' + _getServer(serverId).hostname);
 	};
 
 	$scope.getLink = function (server, serviceName) {
@@ -90,12 +87,12 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 	};
 
 	$scope.deleteServer = function (serverId) {
-		servers.delete({id: serverId});
+		serverResource.delete({id: serverId});
 		$('#delete').modal('hide');
 	};
 
 	$scope.deleteService = function (serverId, serviceName) {
-		servers.deleteService({id: serverId, name: serviceName});
+		serviceResource.delete({id: serverId, name: serviceName});
 		$('#delete').modal('hide');
 	};
 
@@ -124,7 +121,7 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 		var error = function (httpResponse) {
 			toastr.error('Unable to add server configuration');
 		};
-		servers.addServerConfig({id: $scope.server._id, key: key}, {value: value}, success, error);
+		serverResource.addConfig({id: $scope.server._id, key: key}, {value: value}, success, error);
 	};
 
 	$scope.setServerConfig = function (key) {
@@ -136,7 +133,7 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 		var error = function (httpResponse) {
 			toastr.error('Unable to set server configuration');
 		};
-		servers.setServerConfig({id: $scope.server._id, key: key}, {value: value}, success, error);
+		serverResource.setConfig({id: $scope.server._id, key: key}, {value: value}, success, error);
 	};
 
 	$scope.removeServerConfig = function (key) {
@@ -146,7 +143,7 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 		var error = function (httpResponse) {
 			toastr.error('Unable to remove server configuration');
 		};
-		servers.removeServerConfig({id: $scope.server._id, key: key}, null, success, error);
+		serverResource.removeConfig({id: $scope.server._id, key: key}, null, success, error);
 	};
 
 	$scope.addServiceConfig = function () {
@@ -159,7 +156,7 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 		var error = function (httpResponse) {
 			toastr.error('Unable to add service configuration');
 		};
-		servers.addServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success, error);
+		serviceResource.addConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success, error);
 	};
 
 	$scope.setServiceConfig = function (key) {
@@ -171,7 +168,7 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 		var error = function (httpResponse) {
 			toastr.error('Unable to set service configuration');
 		};
-		servers.setServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success, error);
+		serviceResource.setConfig({id: $scope.server._id, name: $scope.service.name, key: key}, {value: value}, success, error);
 	};
 
 	$scope.removeServiceConfig = function (key) {
@@ -181,13 +178,23 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
 		var error = function (httpResponse) {
 			toastr.error('Unable to remove service configuration');
 		};
-		servers.removeServiceConfig({id: $scope.server._id, name: $scope.service.name, key: key}, null, success, error);
+		serviceResource.removeConfig({id: $scope.server._id, name: $scope.service.name, key: key}, null, success, error);
 	};
 
-	$scope.$on('$destroy', function (event) {
-		socket.remove('console', onConsoleListener);
-		socket.remove('refresh', onRefreshListener);
-	});
+	/**
+	 * Search for a server by it's id in the servers list.
+	 *
+	 * @param id the id of the server to find
+	 * @return the server object or null if not found
+	 */
+	var _getServer = function (id) {
+		for (var key in $scope.servers) {
+			if ($scope.servers[key]._id == id) {
+				return $scope.servers[key];
+			}
+		}
+		return null;
+	};
 
 };
 
@@ -202,10 +209,10 @@ function ServicesCtrl($scope, $location, $routeParams, socket, servers, toastr) 
  * Give some methods for reloading the documentation, or executing
  * some methods...
  */
-function ApiDocCtrl($scope, doc, servers, $http, toastr) {
+function ApiDocCtrl($scope, docResource, serverResource, $http, toastr) {
 
 	// Get API documentation
-	$scope.api = doc.getApi(
+	$scope.api = docResource.getApi(
 		function (value, responseHeaders) {
 			$scope.api = value;
 		},
@@ -215,7 +222,7 @@ function ApiDocCtrl($scope, doc, servers, $http, toastr) {
 	);
 
 	// Get API documentation
-	$scope.devHelper = doc.getDevHelper(
+	$scope.devHelper = docResource.getDevHelper(
 		function (value, responseHeaders) {
 			$scope.devHelper = value;
 		},
@@ -225,7 +232,7 @@ function ApiDocCtrl($scope, doc, servers, $http, toastr) {
 	);
 
 	// Get servers list
-	$scope.servers = servers.query(
+	$scope.servers = serverResource.query(
 		function (value, responseHeaders) {
 			$scope.servers = {
 				'api':			[],
@@ -282,7 +289,7 @@ function ApiDocCtrl($scope, doc, servers, $http, toastr) {
 	 * Reload the API documentation from sources
 	 */
 	$scope.reload = function () {
-		doc.reload(
+		docResource.reload(
 			function (value, responseHeaders) {
 				toastr.success('API Documentation generating...');
 			},
@@ -360,10 +367,10 @@ function ApiDocCtrl($scope, doc, servers, $http, toastr) {
 /**
  * Commands Controller
  */
-function CommandsCtrl($scope, command, script) {
+function CommandsCtrl($scope, commandResource, scriptResource) {
 
 	// Get commands from API
-	command.query(
+	commandResource.query(
 		function (commands, responseHeaders) {
 			$scope.scriptCommands = [];
 			$scope.moduleCommands = [];
@@ -381,7 +388,7 @@ function CommandsCtrl($scope, command, script) {
 	);
 
 	// Get scripts from API
-	script.query(
+	scriptResource.query(
 		function (value, responseHeaders) {
 			$scope.scripts = value;
 		},
@@ -394,7 +401,7 @@ function CommandsCtrl($scope, command, script) {
 	 * Reload scripts from sources, call the api reload method.
 	 */
 	$scope.reloadFromDir = function () {
-		command.reload(
+		commandResource.reload(
 			function (value, responseHeaders) {
 				toastr.success('Commands and script reloading...');
 			},
@@ -413,12 +420,12 @@ function CommandsCtrl($scope, command, script) {
 /**
  * Installer Packages Controller
  */
-function InstallersCtrl($scope, installer, toastr) {
+function InstallersCtrl($scope, installerResource, toastr) {
 
 	$scope.installers = [];
 
 	// Get installers list
-	$scope.installers = installer.query(
+	$scope.installers = installerResource.query(
 		function (value, responseHeaders) {
 			$scope.installers = value;
 		},
@@ -428,7 +435,7 @@ function InstallersCtrl($scope, installer, toastr) {
 	);
 
 	$scope.reload = function () {
-		installer.generate(
+		installerResource.generate(
 			function (value, responseHeaders) {
 				toastr.info('Services installers generating...');
 			},

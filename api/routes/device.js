@@ -3,8 +3,8 @@
  * additionnal methods to execute commands on devices for
  * example.
  *
- * @module	devices
- * @name	Devices
+ * @module	device
+ * @name	Device
  */
 
 
