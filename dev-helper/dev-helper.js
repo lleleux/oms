@@ -48,10 +48,19 @@ var gracefulExit = function (callback) {
  * Bootstrap the application.
  * Start the GUI.
  */
-
+/*
 bootstrap.bootstrap('oms-dev-helper', gracefulExit, function () {
 	// Load Modules
 	server = require('server');
 	// Start
 	server.start();
+});*/
+
+var dbInitializer = require('dbInitializer');
+dbInitializer.checkConnection('localhost', '27017', 'omsx', function (err) {
+	if (!err) {
+		dbInitializer.checkInitialized('omsx', function (err) {
+
+		});
+	}
 });
