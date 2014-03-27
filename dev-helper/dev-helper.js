@@ -59,7 +59,7 @@ bootstrap.bootstrap('oms-dev-helper', gracefulExit, function () {
 var dbInitializer = require('dbInitializer');
 dbInitializer.checkConnection('localhost', '27017', 'omsx', function (err) {
 	if (!err) {
-		dbInitializer.checkInitialized('omsx', function (err) {
+		dbInitializer.checkConfigCollection('omsx', function (err) {
 
 		});
 	}
